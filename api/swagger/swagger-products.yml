@@ -1,0 +1,298 @@
+openapi: 3.0.0
+
+info:
+  title: Products API
+  description: API de gestion des produits
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3001/api
+    description: Serveur local
+
+tags:
+  - name: Products
+    description: Gestion des produits
+
+paths:
+  /products:
+    get:
+      summary: Récupérer tous les produits
+      tags: [Products]
+      responses:
+        "200":
+          description: Liste des produits
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+    post:
+      summary: Créer un produit
+      tags: [Products]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+      responses:
+        "201":
+          description: Produit créé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400":
+          description: Champs obligatoires manquants
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Champs obligatoires manquants !"
+
+  /products/{id}:
+    get:
+      summary: Récupérer un produit par ID
+      tags: [Products]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Produit trouvé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Produit non trouvé
+
+    put:
+      summary: Modifier un produit
+      tags: [Products]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductInput"
+      responses:
+        "200":
+          description: Produit modifié
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+
+    delete:
+      summary: Supprimer un produit
+      tags: [Products]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Produit supprimé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Le produit a été supprimé à l'id : 64d2f1a1e4b0c9c1f2a3b123"
+        "400":
+          description: Produit introuvable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Ce produit n'existe pas !"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Erreur dans la suppression du produit : <détails de l'erreur>"
+
+components:
+  schemas:
+    Connectors:
+      type: object
+      properties:
+        name:
+          type: string
+          example: USB-C
+        quantity:
+          type: number
+          example: 2
+
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        originalPrice:
+          type: number
+        quantity:
+          type: number
+        category:
+          type: string
+        brand:
+          type: string
+        condition:
+          type: string
+          enum:
+            - Neuf
+            - Comme neuf
+            - Très bon état
+            - Bon état
+            - Usagé
+            - Reconditionné
+        images:
+          type: array
+          items:
+            type: string
+        model:
+          type: string
+        cpu:
+          type: string
+        gpu:
+          type: string
+        ram:
+          type: number
+        color:
+          type: string
+        weight:
+          type: number
+        storage:
+          type: object
+          properties:
+            capacity:
+              type: number
+            unit:
+              type: string
+              enum: [Go, To]
+            type:
+              type: string
+              enum: [SSD, HDD]
+        screenSize:
+          type: number
+        operatingSystem:
+          type: string
+        wifi:
+          type: boolean
+        webcam:
+          type: boolean
+        numpad:
+          type: boolean
+        microphone:
+          type: boolean
+        bluetooth:
+          type: boolean
+        connectors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Connectors"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ProductInput:
+      type: object
+      required:
+        - name
+        - price
+        - originalPrice
+        - quantity
+        - category
+        - brand
+        - condition
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        originalPrice:
+          type: number
+        quantity:
+          type: number
+        category:
+          type: string
+        brand:
+          type: string
+        condition:
+          type: string
+          enum:
+            - Neuf
+            - Comme neuf
+            - Très bon état
+            - Bon état
+            - Usagé
+            - Reconditionné
+        images:
+          type: array
+          items:
+            type: string
+        model:
+          type: string
+        cpu:
+          type: string
+        gpu:
+          type: string
+        ram:
+          type: number
+        color:
+          type: string
+        weight:
+          type: number
+        storage:
+          type: object
+          properties:
+            capacity:
+              type: number
+            unit:
+              type: string
+              enum: [Go, To]
+            type:
+              type: string
+              enum: [SSD, HDD]
+        connectors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Connectors"
