@@ -8,7 +8,7 @@ const {
 } = require("../../controllers/products.controller");
 const router = express.Router();
 
-// with skip and limit and sort avec asc/1 (croissant) ou desc/-1 (décroissant).
+// with skip and limit and sort
 router.get("/", getProducts);
 
 router.get("/:id", getProduct);

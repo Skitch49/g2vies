@@ -2,7 +2,18 @@ const ProductModel = require("../models/products.model");
 
 module.exports.getProducts = async (req, res) => {
   try {
-    const products = await ProductModel.find();
+    // skip et limit facultatifs
+    const skip = req.query.skip ? parseInt(req.query.skip) : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
+
+    // tri par createdAt (asc ou desc)
+    const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
+
+    const products = await ProductModel.find()
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: sortOrder });
+
     res.status(200).json(products);
   } catch (e) {
     res.status(500).json("Erreur dans l'affichage des produits : " + e);

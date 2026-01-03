@@ -18,6 +18,27 @@ paths:
     get:
       summary: Récupérer tous les produits
       tags: [Products]
+      parameters:
+        - name: skip
+          in: query
+          description: Nombre de produits à sauter
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Nombre maximum de produits à renvoyer
+          required: false
+          schema:
+            type: integer
+        - name: sortOrder
+          in: query
+          description: Ordre de tri par createdAt ("asc" ou "desc")
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
       responses:
         "200":
           description: Liste des produits
@@ -27,6 +48,16 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Product"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Erreur dans l'affichage des produits : <détails de l'erreur>"
 
     post:
       summary: Créer un produit
