@@ -4,9 +4,6 @@ require("dotenv").config();
 
 module.exports.getUsers = async (req, res) => {
   try {
-    // acces admin
-    console.log(req.user.id);
-    console.log(process.env.ADMIN_ID);
     const isAdmin = req.user.id.toString() === process.env.ADMIN_ID;
 
     if (!isAdmin) return res.status(403).json("Accès refusé");

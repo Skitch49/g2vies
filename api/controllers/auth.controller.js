@@ -69,19 +69,3 @@ module.exports.deleteAuth = (req, res) => {
   res.clearCookie("token");
   res.end();
 };
-
-// middleware
-module.exports.verifyToken = (req, res, next) => {
-  const token = req.cookies.token;
-  if (!token) return res.status(401).json("Non authentifié");
-
-  try {
-    const jwt = require("jsonwebtoken");
-
-    const decoded = jwt.verify(token, keyPub);
-    req.user = { id: decoded.sub }; // l'ID de l'utilisateur connecté
-    next();
-  } catch (e) {
-    return res.status(401).json("Token invalide");
-  }
-};

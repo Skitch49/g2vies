@@ -6,7 +6,8 @@ const {
   editPassword,
   getUsers,
 } = require("../../controllers/users.controller");
-const { verifyToken } = require("../../controllers/auth.controller");
+const { verifyAdmin } = require("../../middlewares/admin.middleware");
+const { verifyToken } = require("../../middlewares/auth.middleware");
 
 const router = express.Router();
 
@@ -14,7 +15,8 @@ const router = express.Router();
 router.post("/", createUser);
 
 // Admin route
-router.get("/", verifyToken, getUsers);
+router.get("/", verifyAdmin, getUsers);
+
 // Protected routes
 router.get("/:id", verifyToken, getUser);
 router.patch("/:id", verifyToken, editUser);

@@ -58,14 +58,21 @@ paths:
             schema:
               $ref: "#/components/schemas/ProductInput"
       responses:
-        "201":
+        201:
           description: Produit créé
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Product"
-        "400":
+        400:
           description: Champs obligatoires manquants
+        401:
+          description: Non authentifié
+        403:
+          description: Accès refusé (non admin)
+        500:
+          description: Erreur serveur dans l'ajout du produit
+
           content:
             application/json:
               schema:
@@ -111,8 +118,15 @@ paths:
             schema:
               $ref: "#/components/schemas/ProductInput"
       responses:
-        "200":
+        200:
           description: Produit modifié
+        401:
+          description: Non authentifié
+        403:
+          description: Accès refusé (non admin)
+        500:
+          description: Erreur serveur dans la modification du produit
+
           content:
             application/json:
               schema:
@@ -128,7 +142,7 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        200:
           description: Produit supprimé avec succès
           content:
             application/json:
@@ -138,7 +152,7 @@ paths:
                   message:
                     type: string
                     example: "Le produit a été supprimé à l'id : 64d2f1a1e4b0c9c1f2a3b123"
-        "400":
+        400:
           description: Produit introuvable
           content:
             application/json:
@@ -148,7 +162,11 @@ paths:
                   message:
                     type: string
                     example: "Ce produit n'existe pas !"
-        "500":
+        401:
+          description: Non authentifié
+        403:
+          description: Accès refusé (non admin)
+        500:
           description: Erreur serveur
           content:
             application/json:
