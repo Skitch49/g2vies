@@ -1,20 +1,9 @@
-openapi: 3.0.0
-
-info:
-  title: Products API
-  description: API de gestion des produits
-  version: 1.0.0
-
-servers:
-  - url: http://localhost:3001/api
-    description: Serveur local
-
 tags:
   - name: Products
     description: Gestion des produits
 
 paths:
-  /products:
+  /products/:
     get:
       summary: Récupérer tous les produits
       tags: [Products]

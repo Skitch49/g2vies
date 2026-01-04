@@ -1,0 +1,244 @@
+openapi: 3.0.0
+info:
+  title: MERN Shop Users API
+  version: 1.0.0
+  description: Gestion des utilisateurs pour le projet MERN Shop
+servers:
+  - url: http://localhost:3001/api/users
+
+tags:
+  - name: Users
+    description: Gestion des utilisateurs
+
+paths:
+  /users/:
+    post:
+      tags:
+        - Users
+      summary: Créer un nouvel utilisateur
+      description: Route publique pour créer un compte utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        201:
+          description: Utilisateur créé avec succès
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Champs obligatoire non fourni
+        409:
+          description: Email déjà utilisé, Veuillez vous connecter !
+        500:
+          description: Erreur serveur
+
+    get:
+      tags:
+        - Users
+      summary: Récupérer tous les utilisateurs
+      description: Route admin, JWT obligatoire
+      responses:
+        200:
+          description: Liste des utilisateurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        403:
+          description: Accès refusé (non admin)
+        500:
+          description: Erreur serveur
+
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Récupérer le profil d’un utilisateur
+      description: JWT obligatoire, l’utilisateur ne peut voir que son propre profil
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Utilisateur récupéré
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        403:
+          description: Accès refusé
+        404:
+          description: Utilisateur introuvable
+        500:
+          description: Erreur serveur
+
+    patch:
+      tags:
+        - Users
+      summary: Modifier le profil d’un utilisateur
+      description: JWT obligatoire, ne peut modifier que son propre profil
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        200:
+          description: Utilisateur modifié
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Aucun champ à modifier fourni
+        401:
+          description: Non authentifié ou token invalide
+        403:
+          description: Accès refusé
+        404:
+          description: Utilisateur introuvable
+        500:
+          description: Erreur serveur
+
+  /users/{id}/password:
+    patch:
+      tags:
+        - Users
+      summary: Modifier le mot de passe
+      description: JWT obligatoire, ne peut modifier que son propre mot de passe
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - currentPassword
+                - newPassword
+              properties:
+                currentPassword:
+                  type: string
+                  example: monMotDePasse123
+                newPassword:
+                  type: string
+                  example: monNouveauMotDePasse456
+      responses:
+        200:
+          description: Mot de passe modifié avec succès
+        400:
+          description: Champs manquants
+        401:
+          description: Non authentifié ou token invalide
+        404:
+          description: Utilisateur ou Mot de passe incorrect !
+        500:
+          description: Erreur serveur
+
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        country:
+          type: string
+          example: France
+        street:
+          type: string
+          example: 12 rue de Paris
+        building:
+          type: string
+          example: Bâtiment A
+        postalCode:
+          type: string
+          example: 75001
+        city:
+          type: string
+          example: Paris
+        phone:
+          type: string
+          example: "+33612345678"
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 64f8c9d12a9b1e0012345678
+        firstname:
+          type: string
+          example: Alexis
+        lastname:
+          type: string
+          example: Delaunay
+        email:
+          type: string
+          example: alexis@email.com
+        billingAddress:
+          $ref: "#/components/schemas/Address"
+        deliveryAddress:
+          $ref: "#/components/schemas/Address"
+        stripeCustomerId:
+          type: string
+          example: cus_NxYz123456
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UserInput:
+      type: object
+      required:
+        - firstname
+        - lastname
+        - email
+        - password
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        billingAddress:
+          $ref: "#/components/schemas/Address"
+        deliveryAddress:
+          $ref: "#/components/schemas/Address"
+
+    UserUpdate:
+      type: object
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        billingAddress:
+          $ref: "#/components/schemas/Address"
+        deliveryAddress:
+          $ref: "#/components/schemas/Address"
