@@ -1,0 +1,16 @@
+.asidebar {
+  position: relative;
+  width: 180px;
+  background-color: var(--primary-light);
+  color: var(--text-color-light);
+  a {
+    color: var(--text-color-light);
+  }
+}
+.iconMenu {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+}

@@ -32,6 +32,8 @@ paths:
                 $ref: "#/components/schemas/User"
         400:
           description: Champs obligatoire non fourni
+        401:
+          description: Aucun champs a modifié
         409:
           description: Email déjà utilisé, Veuillez vous connecter !
         500:

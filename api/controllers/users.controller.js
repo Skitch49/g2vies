@@ -97,7 +97,30 @@ module.exports.editUser = async (req, res) => {
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
         if (typeof req.body[field] === "object" && field.endsWith("Address")) {
-          updates[field] = { ...(user[field] || {}), ...req.body[field] };
+          // Fusion avec l'adresse existante
+          const newAddress = { ...(user[field] || {}), ...req.body[field] };
+
+          // Vérifie si au moins un champ est présent
+          const hasAnyValue = Object.values(newAddress).some(
+            (v) => v !== undefined && v !== null && v !== ""
+          );
+
+          if (hasAnyValue) {
+            // Vérifie les champs requis
+            const requiredFields = ["country", "street", "postalCode", "city"];
+            const missingFields = requiredFields.filter(
+              (key) => !newAddress[key]
+            );
+            if (missingFields.length > 0) {
+              return res
+                .status(400)
+                .json(
+                  `Des champs obligatoires sur l'adresse sont manquants ! `
+                );
+            }
+            updates[field] = newAddress;
+          }
+          // sinon on ne met rien pour cette adresse (adresse vide)
         } else {
           updates[field] = req.body[field];
         }
@@ -105,7 +128,7 @@ module.exports.editUser = async (req, res) => {
     });
 
     if (Object.keys(updates).length === 0) {
-      return res.status(400).json("Aucun champ à modifier fourni");
+      return res.status(401).json("Aucun champ à modifier fourni");
     }
 
     const updatedUser = await UsersSchema.findByIdAndUpdate(id, updates, {

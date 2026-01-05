@@ -6,7 +6,7 @@ import { IoCartOutline, IoCart } from "react-icons/io5";
 import { FaUser, FaRegUser } from "react-icons/fa";
 
 function Header() {
-  const { user, signout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   return (
     <header className={`d-flex flex-row align-items-center ${styles.header}`}>
       <div className="flex-fill">
@@ -27,7 +27,7 @@ function Header() {
               )
             }
           </NavLink>
-          <NavLink to="" onClick={() => signout()} className="mr-15">
+          <NavLink to="/profile" className="mr-15">
             {({ isActive }) =>
               isActive ? (
                 <FaUser className="icones" />
@@ -35,7 +35,6 @@ function Header() {
                 <FaRegUser className="icones" />
               )
             }
-            <i class="fa-solid fa-user"></i>
           </NavLink>
         </ul>
       ) : (

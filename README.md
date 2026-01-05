@@ -1,8 +1,9 @@
 # G2vies - API
 
-G2vies est un projet MERN stack (MongoDB, Express, React, Node.js) visant à gérer des produits pour un site e-commerce.
+G2vies est un projet **MERN stack** (MongoDB, Express, React, Node.js) orienté **e-commerce**.
 
-> ⚠️ Pour l'instant, seule la partie **API** est développée. L'API permet de gérer les produits (CRUD) et est documentée via **Swagger**.
+> ⚠️ Pour l’instant, seule la **partie API** est développée.  
+> Cette API gère l’authentification, les utilisateurs et les produits, avec une sécurité basée sur **JWT (RS256)** et des rôles administrateur.
 
 ---
 
@@ -10,12 +11,14 @@ G2vies est un projet MERN stack (MongoDB, Express, React, Node.js) visant à gé
 
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [Génération des clés JWT](#génération-des-clés-jwt)
 - [Démarrage du serveur](#démarrage-du-serveur)
+- [Authentification & Sécurité](#authentification--sécurité)
 - [Routes API](#routes-api)
 - [Swagger Documentation](#swagger-documentation)
-- [Modèle Produit](#modèle-produit)
+- [Modèles](#modèles)
 - [Fonctionnalités](#fonctionnalités)
-- [Librairies utilisées](#librairies-utilis%C3%A9es)
+- [Librairies utilisées](#librairies-utilisées)
 
 ---
 
@@ -24,7 +27,7 @@ G2vies est un projet MERN stack (MongoDB, Express, React, Node.js) visant à gé
 Clonez le projet et installez les dépendances :
 
 ```bash
-git clone <URL_DU_REPO>
+git clone https://github.com/Skitch49/g2vies.git
 cd api
 npm install
 ```
@@ -33,29 +36,52 @@ npm install
 
 ## Configuration
 
-Créez un fichier `.env` à la racine du dossier `api` et ajoutez les variables suivantes :
+Créez un fichier `.env` à la racine du dossier `api` :
 
 ```env
 MONGO_URI=<VOTRE_URI_MONGODB>
 PORT=3001
+ADMIN_ID=<ID_UTILISATEUR_ADMIN>
 ```
 
-- `MONGO_URI` : URI de connexion à votre base de données MongoDB.
-- `PORT` : port sur lequel l'API va écouter (par défaut `3001`).
+### Variables d’environnement
+
+- `MONGO_URI` : URI de connexion MongoDB
+- `PORT` : port du serveur (par défaut `3001`)
+- `ADMIN_ID` : identifiant MongoDB de l’utilisateur administrateur
 
 > ⚠️ Ne partagez jamais votre fichier `.env` publiquement.
 
 ---
 
+## Génération des clés JWT
+
+L’API utilise des **tokens JWT signés en RS256**.
+
+Avant de lancer le serveur, générez les clés RSA dans le dossier keys :
+
+```bash
+node generateKeys.js
+```
+
+Cela va créer :
+
+- `jwtRS256.key` → clé privée
+- `jwtRS256.key.pub` → clé publique
+
+Ces clés sont utilisées pour signer et vérifier les tokens JWT.
+
+---
+
 ## Démarrage du serveur
 
-Pour lancer le serveur en mode développement avec **nodemon** :
+Mode développement avec **nodemon** :
 
 ```bash
 npm run server
 ```
 
-Le serveur sera accessible à l'adresse :
+API disponible sur :
 
 ```
 http://localhost:3001/
@@ -63,41 +89,86 @@ http://localhost:3001/
 
 ---
 
+## Authentification & Sécurité
+
+- Authentification via **JWT stocké dans un cookie**
+- Middleware `verifyToken` pour protéger les routes utilisateurs
+- Middleware `verifyAdmin` pour restreindre certaines routes à l’administrateur
+
+### Middleware `verifyToken`
+
+- Vérifie la validité du token JWT
+- Injecte `req.user.id` avec l’ID de l’utilisateur connecté
+
+### Middleware `verifyAdmin`
+
+- Vérifie le token JWT
+- Compare l’ID utilisateur avec `ADMIN_ID`
+- Refuse l’accès si l’utilisateur n’est pas administrateur
+
+---
+
 ## Routes API
 
-### Racine
+### Authentification (`/api/auth`)
 
-- `GET /` : Page d'accueil de l'API. Message de bienvenue.
-- `GET /api` : Liste des routes disponibles.
+| Méthode | Route      | Description                     |
+| ------: | ---------- | ------------------------------- |
+|    POST | `/`        | Connexion utilisateur           |
+|  DELETE | `/`        | Déconnexion utilisateur         |
+|     GET | `/current` | Récupère l’utilisateur connecté |
+
+---
+
+### Utilisateurs (`/api/users`)
+
+| Méthode | Route           | Accès       | Description                          |
+| ------: | --------------- | ----------- | ------------------------------------ |
+|    POST | `/`             | Public      | Création d’un utilisateur            |
+|     GET | `/`             | Admin       | Récupère tous les utilisateurs       |
+|     GET | `/:id`          | Authentifié | Récupère un utilisateur par ID       |
+|   PATCH | `/:id`          | Authentifié | Modification des données utilisateur |
+|   PATCH | `/:id/password` | Authentifié | Modification du mot de passe         |
+
+---
 
 ### Produits (`/api/products`)
 
-| Méthode | Route  | Description                                                        |
-| ------- | ------ | ------------------------------------------------------------------ |
-| GET     | `/`    | Récupère tous les produits (supporte `skip`, `limit`, `sortOrder`) |
-| GET     | `/:id` | Récupère un produit par son ID                                     |
-| POST    | `/`    | Crée un nouveau produit                                            |
-| PUT     | `/:id` | Modifie un produit existant                                        |
-| DELETE  | `/:id` | Supprime un produit par son ID                                     |
+| Méthode | Route  | Accès  | Description                           |
+| ------: | ------ | ------ | ------------------------------------- |
+|     GET | `/`    | Public | Liste des produits (pagination & tri) |
+|     GET | `/:id` | Public | Récupère un produit par ID            |
+|    POST | `/`    | Admin  | Création d’un produit                 |
+|     PUT | `/:id` | Admin  | Modification d’un produit             |
+|  DELETE | `/:id` | Admin  | Suppression d’un produit              |
 
-Exemple pour récupérer tous les produits avec tri décroissant et pagination :
+Paramètres disponibles :
 
 ```
-GET /api/products?skip=0&limit=10&sortOrder=desc
+/api/products?skip=0&limit=10&sortOrder=desc
 ```
 
 ---
 
 ## Swagger Documentation
 
-L’API est documentée avec **Swagger** :
+Documentation interactive disponible à l’adresse :
 
-- URL : `http://localhost:3001/api-docs`
-- Vous pouvez visualiser les routes, tester les endpoints et consulter les modèles.
+```
+http://localhost:3001/api-docs
+```
+
+Permet de :
+
+- Visualiser toutes les routes
+- Tester les endpoints
+- Consulter les schémas de données
 
 ---
 
-## Modèle Produit
+## Modèles
+
+### Product
 
 Le modèle `Product` contient les champs suivants :
 
@@ -122,14 +193,18 @@ Le modèle `Product` contient les champs suivants :
 
 ## Fonctionnalités
 
-- CRUD complet pour les produits.
-- Support de la pagination et du tri (`skip`, `limit`, `sortOrder`).
-- Validation des champs obligatoires lors de la création d’un produit.
-- Documentation Swagger pour tester facilement l’API.
+- Authentification sécurisée JWT (RS256)
+- Gestion des utilisateurs
+- Gestion des produits (CRUD)
+- Rôles administrateur
+- Support de la pagination et du tri (`skip`, `limit`, `sortOrder`)
+- Documentation Swagger pour tester facilement l’API
 
 ---
 
 ## Librairies utilisées
+
+### Backend (API – Node.js / Express)
 
 - `express` : framework web pour Node.js
 - `nodemon` : rechargement automatique du serveur en développement
@@ -140,10 +215,22 @@ Le modèle `Product` contient les champs suivants :
 - `dotenv` : gestion des variables d'environnement
 - `swagger-ui-express` : documentation interactive Swagger
 - `yamljs` : lecture de fichiers YAML pour Swagger
+- `cors` : gestion des requêtes cross-origin
+- `sass-embedded` : lecture de fichiers scss pour le css
+
+### Frontend (React)
+
+- `react-hook-form` : gestion et validation des formulaires
+- `@hookform/resolvers` : intégration des schémas de validation
+- `yup` : validation des données côté client
+- `react-router-dom` : gestion du routing
+- `sass-embedded` : gestion des styles SCSS
+- `react-icons` : bibliothèque d’icônes React
 
 ---
 
 ## Remarques
 
-- Cette API est en cours de développement et constitue la base du projet G2vies.
-- Les futures évolutions incluront l’authentification, la gestion des utilisateurs et l’intégration frontend avec React.
+- L’API est en cours de développement
+- Elle constitue la base backend du projet **G2vies**
+- Les futures évolutions incluront l’extension des règles métiers et des fonctionnalités e-commerce

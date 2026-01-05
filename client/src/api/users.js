@@ -20,3 +20,24 @@ export async function createUser(newUser) {
     }
   }
 }
+
+export async function editUser(user, id) {
+  const response = await fetch(`${API_USERS}/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(user),
+  });
+  const body = await response.json();
+  if (response.ok) {
+    return body;
+  } else {
+    if (body) {
+      throw body;
+    } else {
+      throw new Error("Error API editUser");
+    }
+  }
+}
