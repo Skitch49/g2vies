@@ -23,6 +23,8 @@
 .card {
   border-radius: var(--border-radius);
   background-color: white;
+  padding: 10px;
+  box-shadow: var(--box-shadow);
 }
 
 .text-primary {
@@ -40,6 +42,7 @@ select {
   padding: 10px 15px;
   border: 2px solid var(--gray-2);
   border-radius: var(--border-radius);
+  background: var(--white);
 }
 
 .form-error {

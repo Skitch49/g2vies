@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext } from "react";
 import { AuthContext } from "../../context";
 import { Navigate, NavLink } from "react-router-dom";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 function Signin() {
   const { signin, user } = useContext(AuthContext);
@@ -63,7 +64,7 @@ function Signin() {
             </div>
             <div className="mb-10 d-flex flex-column">
               <label htmlFor="password">Password</label>
-              <input type="password" id="password" {...register("password")} />
+              <PasswordInput nameValue={"password"} register={register} />
               {errors.password && (
                 <p className="form-error">{errors.password.message}</p>
               )}

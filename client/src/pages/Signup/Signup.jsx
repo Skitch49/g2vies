@@ -6,6 +6,7 @@ import { createUser } from "../../api/users";
 import { Navigate, NavLink } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 function Signup() {
   const { user, signin } = useContext(AuthContext);
@@ -110,18 +111,17 @@ function Signup() {
         </div>
         <div className="mb-10 d-flex flex-column">
           <label htmlFor="password">Mot de passe</label>
-          <input {...register("password")} type="password" id="password" />
+          <PasswordInput nameValue={"password"} register={register} />{" "}
           {errors.password && (
             <p className="form-error">{errors.password.message}</p>
           )}
         </div>
         <div className="mb-10 d-flex flex-column">
           <label htmlFor="confirmPassword">Confirmation de mot de passe</label>
-          <input
-            {...register("confirmPassword")}
-            type="password"
-            id="confirmPassword"
-          />
+          <PasswordInput
+            nameValue={"confirmPassword"}
+            register={register}
+          />{" "}
           {errors.confirmPassword && (
             <p className="form-error">{errors.confirmPassword.message}</p>
           )}
