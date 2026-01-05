@@ -1,0 +1,13 @@
+.profileContainer {
+  max-width: 500px;
+  flex: 1 1 auto;
+}
+.asidebar {
+  width: 180px;
+  background-color: var(--primary-light);
+
+  color: var(--text-color-light);
+  a {
+    color: var(--text-color-light);
+  }
+}

@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-color);
+  background-color: var(--gray-2);
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  user-select: none;
+}
+
+::placeholder,
+input {
+  font-family: var(--font-family);
+}
+
+a {
+  color: var(--text-color);
+  text-decoration: none;
+}
