@@ -3,12 +3,13 @@ import styles from "./Signin.module.scss";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext } from "react";
-import { AuthContext } from "../../context";
+import { AlertContext, AuthContext } from "../../context";
 import { Navigate, NavLink } from "react-router-dom";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 function Signin() {
   const { signin, user } = useContext(AuthContext);
+  const { addAlert } = useContext(AlertContext);
   const validationSchema = yup.object({
     email: yup
       .string()
@@ -19,7 +20,7 @@ function Signin() {
       .required("Votre mot de passe est obligatoire !")
       .min(6, "Votre mot de passe doit avoir 6 caratères minimum !")
       .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[\s\S]+$/,
         "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial !"
       ),
   });
@@ -32,8 +33,16 @@ function Signin() {
     try {
       clearErrors();
       await signin(values);
+      addAlert({
+        state: "success",
+        value: "Connexion réussi avec succès",
+      });
     } catch (message) {
       setError("generic", { type: "generic", message });
+      addAlert({
+        state: "danger",
+        value: message,
+      });
     }
   }
 
@@ -47,7 +56,7 @@ function Signin() {
   return (
     <>
       {user ? (
-        <Navigate to="/profile"></Navigate>
+        <Navigate to="/dashboard/profile"></Navigate>
       ) : (
         <div className="flex-fill d-flex align-items-center justify-content-center">
           <form

@@ -16,5 +16,22 @@
   --text-color-light: #f3f7f6;
   --border: 1px solid var(--gray-2);
   --border-radius: 4px;
-  --warning: #e74c3c;
+  // --warning: #e74c3c;
+
+  /* ALERTES */
+  --alert-info-bg: #eaf3fb;
+  --alert-info-border: #3b82c4;
+  --alert-info-text: #1e4f7a;
+
+  --alert-success-bg: #e6f4ea;
+  --alert-success-border: #27ae60;
+  --alert-success-text: #1e8449;
+
+  --alert-warning-bg: #fff4e5;
+  --alert-warning-border: #f39c12;
+  --alert-warning-text: #b9770e;
+
+  --alert-danger-bg: #fdecea;
+  --alert-danger-border: #e74c3c;
+  --alert-danger-text: #c0392b;
 }

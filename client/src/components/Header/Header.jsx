@@ -18,7 +18,7 @@ function Header() {
         <ul
           className={`${styles.headerList} d-flex flex-row align-items-center`}
         >
-          <NavLink to="/cart" className="mr-15">
+          <NavLink to="/dashboard/cart" className="mr-15">
             {({ isActive }) =>
               isActive ? (
                 <IoCart className="icones cart active" />
@@ -27,7 +27,7 @@ function Header() {
               )
             }
           </NavLink>
-          <NavLink to="/profile" className="mr-15">
+          <NavLink to="/dashboard/profile" className="mr-15">
             {({ isActive }) =>
               isActive ? (
                 <FaUser className="icones" />
@@ -41,7 +41,7 @@ function Header() {
         <ul
           className={`${styles.headerList} d-flex flex-row align-items-center`}
         >
-          <NavLink to="/cart" className="mr-15">
+          <NavLink to="/dashboard/cart" className="mr-15">
             <IoCartOutline className="icones cart" />
           </NavLink>
           <NavLink to="/signin" className="mr-15">

@@ -1,0 +1,89 @@
+.asidebar {
+  position: relative;
+  background-color: var(--primary-light);
+  color: var(--text-color-light);
+  .wrapperAside {
+    position: sticky;
+    top: 5px;
+  }
+}
+.iconMenu {
+  position: absolute;
+  top: 2px;
+  right: 0px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.xsMenu {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.navlink {
+  position: relative;
+  margin-bottom: 8px;
+  padding: 5px;
+  color: var(--primary);
+  background-color: var(--secondary-light);
+  border-radius: var(--border-radius);
+  transition: color 0.3s;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: scaleY(1);
+    width: 4px;
+    height: 100%;
+    background-color: var(--primary-dark);
+    border-radius: 2px;
+    opacity: 1;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  &:hover {
+    color: var(--primary-dark);
+
+    &::before {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+  }
+}
+.active {
+  color: var(--primary-dark);
+
+  &::before {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+.navlinkXs {
+  margin-bottom: 8px;
+  color: var(--secondary-light);
+  &:hover {
+    color: var(--text-color-light);
+  }
+}
+
+.activeXs {
+  svg {
+    color: var(--white);
+  }
+}
+.xsIcons {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.4s, color 0.4s;
+  color: var(--secondary-light);
+  &:hover {
+    color: var(--text-color-light);
+  }
+}
+.userIcon {
+  width: 16px;
+  height: 16px;
+}

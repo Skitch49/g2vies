@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import styles from "./ProfileInfos.module.scss";
-import { AuthContext } from "../../../../context";
+import { AuthContext } from "../../../../../../context";
 
 function ProfileInfos() {
   const { user } = useContext(AuthContext);

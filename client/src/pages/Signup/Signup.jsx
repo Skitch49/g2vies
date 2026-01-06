@@ -5,11 +5,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { createUser } from "../../api/users";
 import { Navigate, NavLink } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "../../context";
+import { AlertContext, AuthContext } from "../../context";
 import PasswordInput from "../../components/PasswordInput/PasswordInput";
 
 function Signup() {
   const { user, signin } = useContext(AuthContext);
+  const { addAlert } = useContext(AlertContext);
 
   const validationSchema = yup.object({
     firstname: yup
@@ -31,7 +32,7 @@ function Signup() {
       .required("Votre mot de passe est obligatoire !")
       .min(6, "Votre mot de passe doit avoir 6 caratères minimum !")
       .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[\s\S]+$/,
         "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial !"
       ),
     confirmPassword: yup
@@ -39,7 +40,7 @@ function Signup() {
       .required("Votre mot de passe est obligatoire !")
       .min(6, "Votre mot de passe doit avoir 6 caratères minimum !")
       .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[\s\S]+$/,
         "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial !"
       )
       .oneOf(
@@ -76,13 +77,15 @@ function Signup() {
       await createUser(newValues);
       const { email, password } = newValues;
       await signin({ email, password });
+      addAlert({ state: "success", value: "Inscription réussi " });
     } catch (message) {
       console.error(message);
       setError("generic", { type: "generic", message });
+      addAlert({ state: "danger", value: message });
     }
   }
   return user ? (
-    <Navigate to="/profile"></Navigate>
+    <Navigate to="/dashboard/profile"></Navigate>
   ) : (
     <div className="d-flex flex-fill align-items-center justify-content-center">
       <form

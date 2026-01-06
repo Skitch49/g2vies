@@ -51,7 +51,7 @@ export async function editPassword(password, id) {
     },
     body: JSON.stringify(password),
   });
-  const body = response.json();
+  const body = await response.json();
   if (response.ok) {
     return body;
   } else {

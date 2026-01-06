@@ -1,15 +1,15 @@
 import { useContext } from "react";
-import { AuthContext } from "../../../../context";
+import { AlertContext, AuthContext } from "../../../../../../context";
 import { useForm } from "react-hook-form";
-import { countries } from "../../../../constants/countries";
+import { countries } from "../../../../../../constants/countries";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { editUser } from "../../../../api";
+import { editUser } from "../../../../../../api";
 import styles from "./ProfileEdit.module.scss";
 
 function ProfileEdit() {
   const { user } = useContext(AuthContext);
-
+  const { addAlert } = useContext(AlertContext);
   const addressSchema = yup
     .object({
       country: yup
@@ -146,14 +146,26 @@ function ProfileEdit() {
         type: "generic",
         message: "Aucune modification effectué !",
       });
+      addAlert({
+        state: "warning",
+        value: "Aucune modification effectué !",
+      });
       return;
     }
     try {
       const userId = user._id;
 
       await editUser(newValues, userId);
+      addAlert({
+        state: "success",
+        value: "Profil modifié avec succès !",
+      });
     } catch (message) {
       setError("generic", { type: "generic", message });
+      addAlert({
+        state: "danger",
+        value: message,
+      });
     }
   }
 

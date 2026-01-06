@@ -1,13 +1,14 @@
 import { useForm } from "react-hook-form";
-import PasswordInput from "../../../../components/PasswordInput/PasswordInput";
+import PasswordInput from "../../../../../../components/PasswordInput/PasswordInput";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { editPassword } from "../../../../api/users";
+import { editPassword } from "../../../../../../api/users";
 import { useContext } from "react";
-import { AuthContext } from "../../../../context";
+import { AuthContext, AlertContext } from "../../../../../../context";
 
 function ProfilePasswordEdit() {
   const { user } = useContext(AuthContext);
+  const { addAlert } = useContext(AlertContext);
 
   const validationSchema = yup.object({
     currentPassword: yup
@@ -63,8 +64,16 @@ function ProfilePasswordEdit() {
         values;
       await editPassword(cleanPassword, user._id);
       reset();
+      addAlert({
+        state: "success",
+        value: "Mot de passe modifié avec succes !",
+      });
     } catch (message) {
       setError("generic", { type: "generic", message });
+      addAlert({
+        state: "danger",
+        value: message,
+      });
     }
   }
 

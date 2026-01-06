@@ -1,0 +1,12 @@
+.alertsWrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  height: -webkit-fill-available;
+  margin-top: 1rem;
+  right: 6px;
+}
+.stickyPosition {
+  position: sticky;
+  top: 1rem;
+}

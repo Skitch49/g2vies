@@ -226,6 +226,7 @@ Le modèle `Product` contient les champs suivants :
 - `react-router-dom` : gestion du routing
 - `sass-embedded` : gestion des styles SCSS
 - `react-icons` : bibliothèque d’icônes React
+- `react-transition-group` : bibliothèque d'animations React
 
 ---
 

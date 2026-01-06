@@ -7,15 +7,18 @@ import { rootLoader } from "./loaders/rootLoader";
 const Homepage = lazy(() => import("./pages/Homepage/Homepage"));
 const Signup = lazy(() => import("./pages/Signup/Signup"));
 const Signin = lazy(() => import("./pages/Signin/Signin"));
-const Profile = lazy(() => import("./pages/Profile/Profile"));
+const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
+const Profile = lazy(() => import("./pages/Dashboard/pages/Profile/Profile"));
 const ProfileInfos = lazy(() =>
-  import("./pages/Profile/pages/ProfileInfos/ProfileInfos")
+  import("./pages/Dashboard/pages/Profile/pages/ProfileInfos/ProfileInfos")
 );
 const ProfileEdit = lazy(() =>
-  import("./pages/Profile/pages/ProfileEdit/ProfileEdit")
+  import("./pages/Dashboard/pages/Profile/pages/ProfileEdit/ProfileEdit")
 );
 const ProfilePasswordEdit = lazy(() =>
-  import("./pages/Profile/pages/ProfilePasswordEdit/ProfilePasswordEdit")
+  import(
+    "./pages/Dashboard/pages/Profile/pages/ProfilePasswordEdit/ProfilePasswordEdit"
+  )
 );
 const ProtectedRoute = lazy(() =>
   import("./components/ProtectedRoute/ProtectedRoute")
@@ -31,16 +34,22 @@ export const router = createBrowserRouter([
       { path: "signup", element: <Signup /> },
       { path: "signin", element: <Signin /> },
       {
-        path: "profile",
+        path: "dashboard",
         element: (
           <ProtectedRoute>
-            <Profile />
+            <Dashboard />
           </ProtectedRoute>
         ),
         children: [
-          { index: true, element: <ProfileInfos /> },
-          { path: "edit-profile", element: <ProfileEdit /> },
-          { path: "edit-password", element: <ProfilePasswordEdit /> },
+          {
+            path: "profile",
+            element: <Profile />,
+            children: [
+              { index: true, element: <ProfileInfos /> },
+              { path: "edit-profile", element: <ProfileEdit /> },
+              { path: "edit-password", element: <ProfilePasswordEdit /> },
+            ],
+          },
         ],
       },
     ],
