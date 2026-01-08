@@ -2,11 +2,12 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  height: -webkit-fill-available;
+  height: 100%;
   margin-top: 1rem;
   right: 6px;
 }
 .stickyPosition {
   position: sticky;
   top: 1rem;
+  z-index: 99;
 }

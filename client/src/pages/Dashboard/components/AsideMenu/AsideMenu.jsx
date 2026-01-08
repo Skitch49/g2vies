@@ -10,8 +10,8 @@ import { RiLockPasswordLine, RiLockPasswordFill } from "react-icons/ri";
 import { FaUserEdit, FaUser, FaRegUser } from "react-icons/fa";
 
 function AsideMenu({ handleMenu, openMenu, ref }) {
-  const { signout } = useContext(AuthContext);
-
+  const { signout, user } = useContext(AuthContext);
+  let admin = user._id === import.meta.env.VITE_ADMIN_ID ? true : false;
   return (
     <aside
       ref={ref}
@@ -25,70 +25,98 @@ function AsideMenu({ handleMenu, openMenu, ref }) {
           {openMenu ? (
             <>
               <h2 className="mb-10">Profile</h2>
-              <NavLink
-                to="/dashboard/profile"
-                end
-                className={({ isActive }) =>
-                  isActive
-                    ? `${styles.navlink} ${styles.active}`
-                    : styles.navlink
-                }
-              >
-                Infos Profile
-              </NavLink>
-              <NavLink
-                to="/dashboard/profile/edit-profile"
-                className={({ isActive }) =>
-                  isActive
-                    ? `${styles.navlink} ${styles.active}`
-                    : styles.navlink
-                }
-              >
-                Modifier mon Profile
-              </NavLink>
-              <NavLink
-                to="/dashboard/profile/edit-password"
-                className={({ isActive }) =>
-                  isActive
-                    ? `${styles.navlink} ${styles.active}`
-                    : styles.navlink
-                }
-              >
-                Modifier mot de passe
-              </NavLink>
-              <NavLink
-                to="/dashboard/cart"
-                className={({ isActive }) =>
-                  isActive
-                    ? `${styles.navlink} ${styles.active}`
-                    : styles.navlink
-                }
-              >
-                {" "}
-                Voir mon panier
-              </NavLink>
-              <NavLink
-                to="/dashboard/order"
-                className={({ isActive }) =>
-                  isActive
-                    ? `${styles.navlink} ${styles.active}`
-                    : styles.navlink
-                }
-              >
-                {" "}
-                Voir mes commandes
-              </NavLink>
-              <NavLink
-                to="/signin"
-                onClick={() => signout()}
-                className={({ isActive }) =>
-                  isActive
-                    ? `${styles.navlink} ${styles.active}`
-                    : styles.navlink
-                }
-              >
-                Me déconnecter
-              </NavLink>
+              <div className={styles.wrapperNavlink}>
+                <NavLink
+                  to="/dashboard/profile"
+                  end
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles.navlink} ${styles.active}`
+                      : styles.navlink
+                  }
+                >
+                  Infos Profile
+                </NavLink>
+                <NavLink
+                  to="/dashboard/profile/edit-profile"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles.navlink} ${styles.active}`
+                      : styles.navlink
+                  }
+                >
+                  Modifier mon Profile
+                </NavLink>
+                <NavLink
+                  to="/dashboard/profile/edit-password"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles.navlink} ${styles.active}`
+                      : styles.navlink
+                  }
+                >
+                  Modifier mot de passe
+                </NavLink>
+                <NavLink
+                  to="/dashboard/cart"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles.navlink} ${styles.active}`
+                      : styles.navlink
+                  }
+                >
+                  {" "}
+                  Voir mon panier
+                </NavLink>
+                <NavLink
+                  to="/dashboard/order"
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles.navlink} ${styles.active}`
+                      : styles.navlink
+                  }
+                >
+                  {" "}
+                  Voir mes commandes
+                </NavLink>
+                <NavLink
+                  to="/signin"
+                  onClick={() => signout()}
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles.navlink} ${styles.active}`
+                      : styles.navlink
+                  }
+                >
+                  Me déconnecter
+                </NavLink>
+              </div>
+
+              {admin && (
+                <div className={styles.adminWrapperNavlink}>
+                  <NavLink
+                    to="admin"
+                    end
+                    className={({ isActive }) =>
+                      isActive
+                        ? `${styles.navlink} ${styles.active}`
+                        : styles.navlink
+                    }
+                  >
+                    Dashboard Admin
+                  </NavLink>
+                  <NavLink
+                    to="admin/products"
+                    className={({ isActive }) =>
+                      isActive
+                        ? `${styles.navlink} ${styles.active}`
+                        : styles.navlink
+                    }
+                  >
+                    Gestion des produits
+                  </NavLink>
+                </div>
+              )}
             </>
           ) : (
             <div className={styles.xsMenu}>

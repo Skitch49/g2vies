@@ -3,7 +3,8 @@ import { AlertContext } from "../../context";
 
 export function AlertProvider({ children }) {
   const [alerts, setAlerts] = useState([]);
-
+  // valeur dans alert = state & value
+  // valeur dans state = success info warning danger
   function addAlert(alert) {
     setAlerts((prev) => [
       { id: prev.length + 1, ref: createRef(null), ...alert },

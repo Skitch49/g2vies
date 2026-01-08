@@ -20,6 +20,11 @@
   background-color: white;
 }
 
+.btn-warning {
+  background-color: var(--alert-danger-text);
+  color: white;
+  border: 2px solid var(--alert-danger-text);
+}
 .card {
   border-radius: var(--border-radius);
   background-color: white;
@@ -38,11 +43,22 @@ label {
 }
 
 input,
+textarea,
 select {
   padding: 10px 15px;
   border: 2px solid var(--gray-2);
   border-radius: var(--border-radius);
   background: var(--white);
+}
+
+textarea {
+  resize: vertical;
+  height: 80px;
+}
+
+input[type="radio"] {
+  accent-color: var(--primary);
+  cursor: pointer;
 }
 
 .form-error {

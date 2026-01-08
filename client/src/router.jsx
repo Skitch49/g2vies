@@ -21,7 +21,24 @@ const ProfilePasswordEdit = lazy(() =>
   )
 );
 const ProtectedRoute = lazy(() =>
-  import("./components/ProtectedRoute/ProtectedRoute")
+  import("./pages/Dashboard/components/ProtectedRoute/ProtectedRoute")
+);
+const ProtectedAdminRoute = lazy(() =>
+  import("./pages/Dashboard/components/ProtectedAdminRoute/ProtectedAdminRoute")
+);
+const Admin = lazy(() => import("./pages/Dashboard/pages/Admin/Admin"));
+const Product = lazy(() =>
+  import("./pages/Dashboard/pages/Admin/pages/Product/Product")
+);
+const ProductList = lazy(() =>
+  import(
+    "./pages/Dashboard/pages/Admin/pages/Product/pages/ProductList/ProductList"
+  )
+);
+const ProductAdd = lazy(() =>
+  import(
+    "./pages/Dashboard/pages/Admin/pages/Product/pages/ProductAdd/ProductAdd"
+  )
 );
 
 export const router = createBrowserRouter([
@@ -48,6 +65,24 @@ export const router = createBrowserRouter([
               { index: true, element: <ProfileInfos /> },
               { path: "edit-profile", element: <ProfileEdit /> },
               { path: "edit-password", element: <ProfilePasswordEdit /> },
+            ],
+          },
+          {
+            path: "admin",
+            element: (
+              <ProtectedAdminRoute>
+                <Admin />
+              </ProtectedAdminRoute>
+            ),
+            children: [
+              {
+                path: "products",
+                element: <Product />,
+                children: [
+                  { index: true, element: <ProductList /> },
+                  { path: "add", element: <ProductAdd /> },
+                ],
+              },
             ],
           },
         ],
