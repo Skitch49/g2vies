@@ -13,8 +13,8 @@ module.exports.getProducts = async (req, res) => {
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: sortOrder });
-
-    res.status(200).json(products);
+    const totalProducts = await ProductModel.countDocuments();
+    res.status(200).json({ products, totalProducts });
   } catch (e) {
     res.status(500).json("Erreur dans l'affichage des produits : " + e);
   }

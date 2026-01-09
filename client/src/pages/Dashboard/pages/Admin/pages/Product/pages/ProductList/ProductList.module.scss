@@ -1,0 +1,54 @@
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  border: var(--border);
+  border-radius: var(--border-radius);
+  margin-bottom: 10px;
+  thead {
+    background: var(--primary);
+    color: var(--white);
+  }
+  tbody {
+    tr:nth-child(even) {
+      background-color: var(--gray-2);
+    }
+    tr:hover {
+      background-color: var(--secondary-light);
+    }
+  }
+  td,
+  th {
+    padding: 8px;
+  }
+}
+.btnPagination {
+  appearance: none;
+  border: 1px solid var(--primary-light);
+  background: var(--primary-light);
+  margin-right: 5px;
+  padding: 6px;
+  cursor: pointer;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  color: var(--white);
+  opacity: 1;
+
+  transition: opacity 0.4s;
+  &:not(:disabled):hover {
+    opacity: 0.7;
+  }
+}
+.activeBtnPagination {
+  color: var(--primary);
+  background: var(--white);
+}
+.btnDisabled {
+  cursor: default;
+  opacity: 0.7;
+}
+.cellCenter {
+  text-align: center;
+}
+.wrapperLoader {
+  min-height: 420px;
+}

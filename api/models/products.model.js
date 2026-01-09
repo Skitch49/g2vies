@@ -23,8 +23,11 @@ const productsSchema = mongoose.Schema(
     },
 
     images: {
-      type: [String],
+      type: [{ url: { type: String } }],
+      required: true,
+      validate: [(arr) => arr.length > 0, "Au moins une image est requise"],
     },
+
     model: {
       type: String,
     },
