@@ -20,6 +20,19 @@ module.exports.getProducts = async (req, res) => {
   }
 };
 
+module.exports.getBrandsAndCategories = async (req, res) => {
+  try {
+    const brands = await ProductModel.distinct("brand");
+    const categories = await ProductModel.distinct("category");
+
+    res.status(200).json({ brands, categories });
+  } catch (e) {
+    res
+      .status(500)
+      .json("Erreur dans la récupération des marques et catégories : " + e);
+  }
+};
+
 module.exports.getProduct = async (req, res) => {
   const id = req.params.id;
   try {

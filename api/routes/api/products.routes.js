@@ -5,6 +5,7 @@ const {
   getProduct,
   editProduct,
   deleteProduct,
+  getBrandsAndCategories,
 } = require("../../controllers/products.controller");
 const { verifyAdmin } = require("../../middlewares/admin.middleware");
 
@@ -12,6 +13,8 @@ const router = express.Router();
 
 // with skip and limit and sort
 router.get("/", getProducts);
+
+router.get("/brandsAndCategories", getBrandsAndCategories);
 
 router.get("/:id", getProduct);
 

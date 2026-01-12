@@ -10,9 +10,11 @@ function ProductList() {
   const [totalProducts, setTotalProducts] = useState(0);
   const [error, setErrors] = useState(null);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     async function fetchProducts() {
       try {
+        setLoading(true);
         setErrors(null);
         const data = await getProducts(
           LIMIT_PER_PAGE * (page - 1),
@@ -54,7 +56,7 @@ function ProductList() {
           <Loader />
         </div>
       )}
-      {products && (
+      {products && !loading && (
         <>
           <table className={styles.table}>
             <thead>

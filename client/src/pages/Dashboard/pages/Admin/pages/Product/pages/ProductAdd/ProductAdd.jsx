@@ -3,11 +3,19 @@ import styles from "./ProductAdd.module.scss";
 import ToggleInput from "../../../../../../../../components/ToggleInput/ToggleInput";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { createProduct } from "../../../../../../../../api";
+import {
+  createProduct,
+  getBrandsAndCategories,
+} from "../../../../../../../../api";
 import { useContext } from "react";
 import { AlertContext } from "../../../../../../../../context";
+import { useEffect } from "react";
+import { useState } from "react";
 
 function ProductAdd() {
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
+
   const { addAlert } = useContext(AlertContext);
 
   const initialSchema = yup.object({
@@ -120,7 +128,7 @@ function ProductAdd() {
       capacity: yup
         .number()
         .typeError("La capacité de stockage doit être un nombre.")
-        .nullable()
+        .required("La capacité de stockage est obligatoire")
         .min(1, "La capacité de stockage doit être supérieure à 0."),
 
       unit: yup
@@ -247,6 +255,14 @@ function ProductAdd() {
       // reset useFieldArray
       images.replace([{ url: "" }]);
       connectors.replace([{ name: "", quantity: 1 }]);
+      if (values.category == "other") {
+        setCategories([...categories, values.customCategory]);
+        values.category = values.customCategory;
+      }
+      if (values.brand == "other") {
+        setBrands([...brands, values.customBrand]);
+        values.brand = values.customBrand;
+      }
     } catch (error) {
       const errorMessage =
         typeof error === "string"
@@ -258,6 +274,15 @@ function ProductAdd() {
     }
   }
 
+  useEffect(() => {
+    async function getAllBrandsAndCategories() {
+      const data = await getBrandsAndCategories();
+      setBrands(data.brands);
+      setCategories(data.categories);
+    }
+    getAllBrandsAndCategories();
+  }, []);
+  console.log(errors);
   return (
     <div className="card">
       <h3>Ajouter un produit</h3>
@@ -304,8 +329,13 @@ function ProductAdd() {
         <div className="d-flex flex-column mb-5">
           <label htmlFor="category">Catégorie</label>
           <select {...register("category")} id="category">
-            <option value="pc portable">PC Portable</option>
-            <option value="pc fixe">PC Fixe</option>
+            {categories &&
+              categories.map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
+                </option>
+              ))}
+
             <option value="other">Autre</option>
           </select>
           {errors.category && (
@@ -329,8 +359,13 @@ function ProductAdd() {
         <div className="d-flex flex-column mb-5">
           <label htmlFor="brand">Marque</label>
           <select {...register("brand")} id="brand">
-            <option value="pc portable">Lidle</option>
-            <option value="pc fixe">Lenovo</option>
+            {brands &&
+              brands.map((brand, index) => (
+                <option key={index} value={brand}>
+                  {brand}
+                </option>
+              ))}
+
             <option value="other">Autre</option>
           </select>
           {errors.brand && <p className="form-error">{errors.brand.message}</p>}

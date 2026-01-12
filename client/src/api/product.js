@@ -42,3 +42,17 @@ export async function getProducts(skip, limit, sortOrder) {
     }
   }
 }
+
+export async function getBrandsAndCategories() {
+  const response = await fetch(`${PRODUCT_API}/brandsAndCategories`);
+  const body = await response.json();
+  if (response.ok) {
+    return body;
+  } else {
+    if (body) {
+      throw body;
+    } else {
+      throw new Error("Error API getBrandsAndCategories");
+    }
+  }
+}
