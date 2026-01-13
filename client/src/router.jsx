@@ -40,6 +40,11 @@ const ProductAdd = lazy(() =>
     "./pages/Dashboard/pages/Admin/pages/Product/pages/ProductAdd/ProductAdd"
   )
 );
+const ProductEdit = lazy(() =>
+  import(
+    "./pages/Dashboard/pages/Admin/pages/Product/pages/ProductEdit/ProductEdit"
+  )
+);
 
 export const router = createBrowserRouter([
   {
@@ -81,6 +86,7 @@ export const router = createBrowserRouter([
                 children: [
                   { index: true, element: <ProductList /> },
                   { path: "add", element: <ProductAdd /> },
+                  { path: "edit/:id", element: <ProductEdit /> },
                 ],
               },
             ],

@@ -21,7 +21,7 @@ router.get("/:id", getProduct);
 // Admin routes
 router.post("/", verifyAdmin, setProduct);
 
-router.put("/:id", verifyAdmin, editProduct);
+router.patch("/:id", verifyAdmin, editProduct);
 
 router.delete("/:id", verifyAdmin, deleteProduct);
 

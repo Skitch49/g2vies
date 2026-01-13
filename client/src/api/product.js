@@ -56,3 +56,55 @@ export async function getBrandsAndCategories() {
     }
   }
 }
+
+export async function updateProduct(productID, product) {
+  const response = await fetch(`${PRODUCT_API}/${productID}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(product),
+  });
+  const body = await response.json();
+  if (response.ok) {
+    return body;
+  } else {
+    if (body) {
+      throw body;
+    } else {
+      throw new Error("Error API updateProduct");
+    }
+  }
+}
+
+export async function getProduct(productID) {
+  const response = await fetch(`${PRODUCT_API}/${productID}`);
+  const body = await response.json();
+  if (response.ok) {
+    return body;
+  } else {
+    if (body) {
+      throw body;
+    } else {
+      throw new Error("Error API getProduct");
+    }
+  }
+}
+
+export async function deleteProduct(productID) {
+  const response = await fetch(`${PRODUCT_API}/${productID}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  const body = await response.json();
+  if (response.ok) {
+    return body;
+  } else {
+    if (body) {
+      throw body;
+    } else {
+      throw new Error("Error API deleteProduct");
+    }
+  }
+}

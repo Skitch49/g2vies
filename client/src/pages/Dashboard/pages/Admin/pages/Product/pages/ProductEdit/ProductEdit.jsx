@@ -1,20 +1,95 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import styles from "./ProductAdd.module.scss";
+import styles from "./ProductEdit.module.scss";
 import ToggleInput from "../../../../../../../../components/ToggleInput/ToggleInput";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
-  createProduct,
   getBrandsAndCategories,
+  getProduct,
+  updateProduct,
 } from "../../../../../../../../api";
 import { useContext } from "react";
 import { AlertContext } from "../../../../../../../../context";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-function ProductAdd() {
+function ProductEdit() {
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
+
+  const [product, setProduct] = useState(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function getAllBrandsAndCategories() {
+      try {
+        const data = await getBrandsAndCategories();
+        setBrands(data.brands);
+        setCategories(data.categories);
+      } catch (error) {
+        console.error("Error fetching brands and categories:", error);
+        addAlert({
+          state: "danger",
+          value: "Erreur lors du chargement des marques et catégories",
+        });
+      }
+    }
+    async function fetchProduct() {
+      try {
+        const data = await getProduct(id);
+        setProduct(data);
+        reset({
+          name: data.name ?? "",
+          description: data.description ?? "",
+          price: data.price ?? null,
+          originalPrice: data.originalPrice ?? null,
+          quantity: data.quantity ?? 1,
+
+          category: data.category ?? "",
+          customCategory: "",
+          brand: data.brand ?? "",
+          customBrand: "",
+
+          condition: data.condition ?? "Très bon état",
+
+          images: data.images?.length ? data.images : [{ url: "" }],
+          connectors: data.connectors ?? [],
+
+          model: data.model ?? "",
+          cpu: data.cpu ?? "",
+          gpu: data.gpu ?? "",
+          ram: data.ram ?? null,
+          color: data.color ?? "",
+          weight: data.weight ?? null,
+
+          storage: data.storage ?? {
+            capacity: null,
+            unit: "Go",
+            type: "SSD",
+          },
+
+          screenSize: data.screenSize ?? null,
+          operatingSystem: data.operatingSystem ?? "Windows 11",
+
+          wifi: data.wifi ?? false,
+          bluetooth: data.bluetooth ?? false,
+          webcam: data.webcam ?? false,
+          numpad: data.numpad ?? false,
+          microphone: data.microphone ?? false,
+        });
+      } catch (error) {
+        console.error("Error fetching product:", error);
+        addAlert({
+          state: "danger",
+          value: "Erreur lors du chargement du produit",
+        });
+      }
+    }
+    getAllBrandsAndCategories();
+    fetchProduct();
+  }, [id]);
 
   const { addAlert } = useContext(AlertContext);
 
@@ -170,46 +245,6 @@ function ProductAdd() {
     ),
   });
 
-  const defaultValues = {
-    name: "",
-    description: "",
-    price: null,
-    originalPrice: null,
-    quantity: 1,
-
-    category: "pc portable",
-    customCategory: "",
-    brand: "",
-    customBrand: "",
-
-    condition: "Très bon état",
-
-    images: [{ url: "" }],
-    connectors: [{ name: "", quantity: 1 }],
-
-    model: "",
-    cpu: "",
-    gpu: "",
-    ram: null,
-    color: "",
-    weight: null,
-
-    storage: {
-      capacity: null,
-      unit: "Go",
-      type: "SSD",
-    },
-
-    screenSize: null,
-    operatingSystem: "Windows 11",
-
-    wifi: false,
-    bluetooth: false,
-    webcam: false,
-    numpad: false,
-    microphone: false,
-  };
-
   const {
     register,
     handleSubmit,
@@ -220,7 +255,6 @@ function ProductAdd() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues,
     resolver: yupResolver(initialSchema),
   });
   const images = useFieldArray({ control, name: "images" });
@@ -247,9 +281,8 @@ function ProductAdd() {
 
   async function submit(values) {
     clearErrors();
-    console.log(values);
     try {
-      addAlert({ state: "success", value: "Produit ajouté avec succès !" });
+      addAlert({ state: "success", value: "Produit modifié avec succès !" });
       if (values.category == "other") {
         setCategories([...categories, values.customCategory]);
         values.category = values.customCategory;
@@ -258,11 +291,10 @@ function ProductAdd() {
         setBrands([...brands, values.customBrand]);
         values.brand = values.customBrand;
       }
-      await createProduct(values);
-      reset(defaultValues);
-      // reset useFieldArray
-      images.replace([{ url: "" }]);
-      connectors.replace([{ name: "", quantity: 1 }]);
+      await updateProduct(product._id, values);
+
+      // return to product list page
+      navigate("/dashboard/admin/products");
     } catch (error) {
       const errorMessage =
         typeof error === "string"
@@ -273,16 +305,6 @@ function ProductAdd() {
       setError("generic", { type: "generic", message: errorMessage });
     }
   }
-
-  useEffect(() => {
-    async function getAllBrandsAndCategories() {
-      const data = await getBrandsAndCategories();
-      setBrands(data.brands);
-      setCategories(data.categories);
-    }
-    getAllBrandsAndCategories();
-  }, []);
-  console.log(errors);
   return (
     <div className="card">
       <h3>Ajouter un produit</h3>
@@ -661,11 +683,11 @@ function ProductAdd() {
           )}
 
           <button className="btn btn-primary" disabled={isSubmitting}>
-            Ajouter un produit
+            Modifier le produit
           </button>
         </div>
       </form>
     </div>
   );
 }
-export default ProductAdd;
+export default ProductEdit;

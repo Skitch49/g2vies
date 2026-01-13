@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { getProducts } from "../../../../../../../../api/product";
+import {
+  deleteProduct,
+  getProducts,
+} from "../../../../../../../../api/product";
 import Loader from "../../../../../../../../components/Loader/Loader";
 import styles from "./ProductList.module.scss";
+import { AlertContext } from "../../../../../../../../context";
 function ProductList() {
   const LIMIT_PER_PAGE = 10;
   const [page, setPage] = useState(1);
@@ -10,7 +14,7 @@ function ProductList() {
   const [totalProducts, setTotalProducts] = useState(0);
   const [error, setErrors] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const { addAlert } = useContext(AlertContext);
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -33,6 +37,14 @@ function ProductList() {
   }, [page]);
   const totalPages = Math.ceil(totalProducts / LIMIT_PER_PAGE);
 
+  async function deletedProduct(productID) {
+    await deleteProduct(productID);
+    setProducts(products.filter((product) => product._id !== productID));
+    if (products.length === 1 && page > 1) {
+      setPage(page - 1);
+    }
+    addAlert({ state: "danger", value: "Produit supprimé avec succès !" });
+  }
   return (
     <div className="card">
       <div className="d-flex flex-row justify-space-between align-items-center mb-10">
@@ -65,6 +77,8 @@ function ProductList() {
                 <th>Prix</th>
                 <th>Catégorie</th>
                 <th>Quantité</th>
+                <th>Modifier</th>
+                <th>Supprimer</th>
               </tr>
             </thead>
             <tbody>
@@ -74,6 +88,22 @@ function ProductList() {
                   <td>{product.price} €</td>
                   <td>{product.category}</td>
                   <td className={styles.cellCenter}>{product.quantity}</td>
+                  <td>
+                    <NavLink
+                      to={`edit/${product._id}`}
+                      className="btn btn-primary"
+                    >
+                      Modifier
+                    </NavLink>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => deletedProduct(product._id)}
+                    >
+                      Supprimer
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
