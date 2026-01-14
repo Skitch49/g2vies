@@ -26,7 +26,9 @@ export async function getProducts(skip, limit, sortOrder) {
   const params = new URLSearchParams();
 
   params.append("skip", skip !== undefined ? skip : 0);
-  params.append("limit", limit !== undefined ? limit : 10);
+  if (limit !== null && limit !== undefined) {
+    params.append("limit", limit);
+  }
   params.append("sortOrder", sortOrder !== undefined ? sortOrder : "asc");
 
   const response = await fetch(`${PRODUCT_API}?${params.toString()}`);

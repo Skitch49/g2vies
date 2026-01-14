@@ -177,7 +177,7 @@ function ProductAdd() {
     originalPrice: null,
     quantity: 1,
 
-    category: "pc portable",
+    category: "",
     customCategory: "",
     brand: "",
     customBrand: "",
@@ -305,6 +305,7 @@ function ProductAdd() {
             <input
               {...register("originalPrice")}
               type="number"
+              step="0.01"
               id="originalPrice"
             />
             {errors.originalPrice && (
@@ -313,7 +314,12 @@ function ProductAdd() {
           </div>
           <div className="d-flex flex-column mb-5">
             <label htmlFor="price">Prix de vente</label>
-            <input {...register("price")} type="number" id="price" />
+            <input
+              {...register("price")}
+              type="number"
+              step="0.01"
+              id="price"
+            />
             {errors.price && (
               <p className="form-error">{errors.price.message}</p>
             )}
@@ -329,6 +335,9 @@ function ProductAdd() {
         <div className="d-flex flex-column mb-5">
           <label htmlFor="category">Catégorie</label>
           <select {...register("category")} id="category">
+            <option value="" disabled>
+              Sélectionne une catégorie
+            </option>
             {categories &&
               categories.map((cat, index) => (
                 <option key={index} value={cat}>
@@ -359,6 +368,10 @@ function ProductAdd() {
         <div className="d-flex flex-column mb-5">
           <label htmlFor="brand">Marque</label>
           <select {...register("brand")} id="brand">
+            <option value="" disabled>
+              Sélectionne une marque
+            </option>
+
             {brands &&
               brands.map((brand, index) => (
                 <option key={index} value={brand}>
@@ -424,7 +437,7 @@ function ProductAdd() {
                 {index > 0 && (
                   <button
                     type="button"
-                    className={`${styles.rightBtnDelete} btn btn-warning`}
+                    className={`${styles.rightBtnDelete} btn btn-danger`}
                     onClick={() => deleteField(images, index)}
                   >
                     Supprimer
@@ -568,18 +581,13 @@ function ProductAdd() {
           <input
             {...register("screenSize")}
             type="number"
+            step="0.1"
             id="screenSize"
             placeholder="en pouce"
           />
         </div>
-        <div className="d-flex justify-space-around wrap flex-row-reverse">
-          <div
-            className={`d-flex  wrap ${
-              selectedCategory == "pc portable"
-                ? "flex-column"
-                : "flex-row d-flex align-items-center justify-space-around flex-fill"
-            }  `}
-          >
+        <div className="d-flex justify-space-around flex-wrap flex-row-reverse">
+          <div className={`d-flex  flex-wrap flex-column`}>
             <ToggleInput label="Wifi" name="wifi" register={register} />
             <ToggleInput
               label="bluetooth"
@@ -588,17 +596,15 @@ function ProductAdd() {
             />
           </div>
 
-          {selectedCategory == "pc portable" && (
-            <div className="">
-              <ToggleInput label="Numpad" name="numpad" register={register} />
-              <ToggleInput label="Webcam" name="webcam" register={register} />
-              <ToggleInput
-                label="Microphone"
-                name="microphone"
-                register={register}
-              />
-            </div>
-          )}
+          <div className="">
+            <ToggleInput label="Numpad" name="numpad" register={register} />
+            <ToggleInput label="Webcam" name="webcam" register={register} />
+            <ToggleInput
+              label="Microphone"
+              name="microphone"
+              register={register}
+            />
+          </div>
         </div>
         <div className="d-flex flex-column mb-5">
           {connectors.fields.map((connector, index) => (
@@ -640,7 +646,7 @@ function ProductAdd() {
 
               <button
                 type="button"
-                className="btn btn-warning"
+                className="btn btn-danger"
                 onClick={() => deleteField(connectors, index)}
               >
                 Supprimer

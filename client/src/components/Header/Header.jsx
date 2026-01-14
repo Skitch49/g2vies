@@ -18,6 +18,9 @@ function Header() {
         <ul
           className={`${styles.headerList} d-flex flex-row align-items-center`}
         >
+          <NavLink to="/boutique" className="mr-15">
+            Catalogue
+          </NavLink>
           <NavLink to="/dashboard/cart" className="mr-15">
             {({ isActive }) =>
               isActive ? (
@@ -41,6 +44,9 @@ function Header() {
         <ul
           className={`${styles.headerList} d-flex flex-row align-items-center`}
         >
+          <NavLink to="/boutique" className="mr-15">
+            Catalogue
+          </NavLink>
           <NavLink to="/dashboard/cart" className="mr-15">
             <IoCartOutline className="icones cart" />
           </NavLink>

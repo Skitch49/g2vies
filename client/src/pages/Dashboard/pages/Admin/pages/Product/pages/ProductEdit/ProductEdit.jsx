@@ -327,6 +327,7 @@ function ProductEdit() {
             <input
               {...register("originalPrice")}
               type="number"
+              step="0.01"
               id="originalPrice"
             />
             {errors.originalPrice && (
@@ -335,7 +336,12 @@ function ProductEdit() {
           </div>
           <div className="d-flex flex-column mb-5">
             <label htmlFor="price">Prix de vente</label>
-            <input {...register("price")} type="number" id="price" />
+            <input
+              {...register("price")}
+              type="number"
+              step="0.01"
+              id="price"
+            />
             {errors.price && (
               <p className="form-error">{errors.price.message}</p>
             )}
@@ -446,7 +452,7 @@ function ProductEdit() {
                 {index > 0 && (
                   <button
                     type="button"
-                    className={`${styles.rightBtnDelete} btn btn-warning`}
+                    className={`${styles.rightBtnDelete} btn btn-danger`}
                     onClick={() => deleteField(images, index)}
                   >
                     Supprimer
@@ -590,18 +596,13 @@ function ProductEdit() {
           <input
             {...register("screenSize")}
             type="number"
+            step="0.1"
             id="screenSize"
             placeholder="en pouce"
           />
         </div>
-        <div className="d-flex justify-space-around wrap flex-row-reverse">
-          <div
-            className={`d-flex  wrap ${
-              selectedCategory == "pc portable"
-                ? "flex-column"
-                : "flex-row d-flex align-items-center justify-space-around flex-fill"
-            }  `}
-          >
+        <div className="d-flex justify-space-around flex-wrap flex-row-reverse">
+          <div className={`d-flex flex-wrap flex-column`}>
             <ToggleInput label="Wifi" name="wifi" register={register} />
             <ToggleInput
               label="bluetooth"
@@ -610,17 +611,15 @@ function ProductEdit() {
             />
           </div>
 
-          {selectedCategory == "pc portable" && (
-            <div className="">
-              <ToggleInput label="Numpad" name="numpad" register={register} />
-              <ToggleInput label="Webcam" name="webcam" register={register} />
-              <ToggleInput
-                label="Microphone"
-                name="microphone"
-                register={register}
-              />
-            </div>
-          )}
+          <div className="">
+            <ToggleInput label="Numpad" name="numpad" register={register} />
+            <ToggleInput label="Webcam" name="webcam" register={register} />
+            <ToggleInput
+              label="Microphone"
+              name="microphone"
+              register={register}
+            />
+          </div>
         </div>
         <div className="d-flex flex-column mb-5">
           {connectors.fields.map((connector, index) => (
@@ -662,7 +661,7 @@ function ProductEdit() {
 
               <button
                 type="button"
-                className="btn btn-warning"
+                className="btn btn-danger"
                 onClick={() => deleteField(connectors, index)}
               >
                 Supprimer
