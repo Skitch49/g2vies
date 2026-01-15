@@ -3,6 +3,7 @@ import { getProducts } from "../../api";
 import ShopCard from "./components/ShopCard/ShopCard";
 import ShopMenu from "./components/ShopMenu/ShopMenu";
 import SearchBar from "./components/SearchBar/SearchBar";
+import { Outlet, useMatch } from "react-router-dom";
 
 function Shop() {
   const PRODUCTS_PER_LOAD = 12;
@@ -90,7 +91,6 @@ function Shop() {
   const visibleProducts = filteredProducts.slice(0, visibleCount);
 
   function onFilterChange(name, value, checked) {
-
     setFilters((prev) => {
       const values = prev[name] || [];
       if (name === "storage") {
@@ -137,25 +137,33 @@ function Shop() {
     return () => observer.disconnect();
   }, [visibleCount, filteredProducts.length]);
 
+  const isProductPage = useMatch("/boutique/:idProduct");
+
   return (
     <div className="container ">
-      <SearchBar
-        value={searchBar}
-        onInput={searchProduct}
-        count={filteredProducts.length}
-      />
-      <main className="flex-fill d-flex flex-row gap-10">
-        <ShopMenu products={products} onFilterChange={onFilterChange} />
-        <div className="container-cards">
-          <div className="wrapper-cards d-flex flex-row flex-wrap gap-10 mb-20">
-            {products &&
-              visibleProducts.map((product) => (
-                <ShopCard key={product._id} product={product} />
-              ))}
-            <div ref={loaderRef} style={{ height: "1px" }}></div>
-          </div>
-        </div>
-      </main>
+      {isProductPage ? (
+        <Outlet />
+      ) : (
+        <>
+          <SearchBar
+            value={searchBar}
+            onInput={searchProduct}
+            count={filteredProducts.length}
+          />
+          <main className="flex-fill d-flex flex-row gap-10">
+            <ShopMenu products={products} onFilterChange={onFilterChange} />
+            <div className="container-cards">
+              <div className="wrapper-cards d-flex flex-row flex-wrap gap-10 mb-20">
+                {products &&
+                  visibleProducts.map((product) => (
+                    <ShopCard key={product._id} product={product} />
+                  ))}
+                <div ref={loaderRef} style={{ height: "1px" }}></div>
+              </div>
+            </div>
+          </main>
+        </>
+      )}
     </div>
   );
 }

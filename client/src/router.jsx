@@ -6,6 +6,9 @@ import { rootLoader } from "./loaders/rootLoader";
 // lazy loading
 const Homepage = lazy(() => import("./pages/Homepage/Homepage"));
 const Shop = lazy(() => import("./pages/Shop/Shop"));
+const ShopProduct = lazy(() =>
+  import("./pages/Shop/pages/ShopProduct/ShopProduct")
+);
 
 const Signup = lazy(() => import("./pages/Signup/Signup"));
 const Signin = lazy(() => import("./pages/Signin/Signin"));
@@ -55,7 +58,11 @@ export const router = createBrowserRouter([
     loader: rootLoader,
     children: [
       { index: true, element: <Homepage /> },
-      { path: "boutique", element: <Shop /> },
+      {
+        path: "boutique",
+        element: <Shop />,
+        children: [{ path: ":idProduct", element: <ShopProduct /> }],
+      },
       { path: "signup", element: <Signup /> },
       { path: "signin", element: <Signin /> },
       {
