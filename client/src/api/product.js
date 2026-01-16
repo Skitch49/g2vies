@@ -45,6 +45,34 @@ export async function getProducts(skip, limit, sortOrder) {
   }
 }
 
+export async function getProduct(productID) {
+  const response = await fetch(`${PRODUCT_API}/${productID}`);
+  const body = await response.json();
+  if (response.ok) {
+    return body;
+  } else {
+    if (body) {
+      throw body;
+    } else {
+      throw new Error("Error API getProduct");
+    }
+  }
+}
+
+export async function getSimilarProducts(productID) {
+  const response = await fetch(`${PRODUCT_API}/similarProduct/${productID}`);
+  const body = await response.json();
+  if (response.ok) {
+    return body;
+  } else {
+    if (body) {
+      throw body;
+    } else {
+      throw new Error("Error API getSimilarProducts");
+    }
+  }
+}
+
 export async function getBrandsAndCategories() {
   const response = await fetch(`${PRODUCT_API}/brandsAndCategories`);
   const body = await response.json();
@@ -76,20 +104,6 @@ export async function updateProduct(productID, product) {
       throw body;
     } else {
       throw new Error("Error API updateProduct");
-    }
-  }
-}
-
-export async function getProduct(productID) {
-  const response = await fetch(`${PRODUCT_API}/${productID}`);
-  const body = await response.json();
-  if (response.ok) {
-    return body;
-  } else {
-    if (body) {
-      throw body;
-    } else {
-      throw new Error("Error API getProduct");
     }
   }
 }

@@ -6,6 +6,7 @@ const {
   editProduct,
   deleteProduct,
   getBrandsAndCategories,
+  getSimilarProducts,
 } = require("../../controllers/products.controller");
 const { verifyAdmin } = require("../../middlewares/admin.middleware");
 
@@ -15,6 +16,8 @@ const router = express.Router();
 router.get("/", getProducts);
 
 router.get("/brandsAndCategories", getBrandsAndCategories);
+
+router.get("/similarProduct/:id", getSimilarProducts);
 
 router.get("/:id", getProduct);
 

@@ -1,5 +1,7 @@
 # G2vies - API
 
+![G2vies](./picture_readme.png)
+
 G2vies est un projet **MERN stack** (MongoDB, Express, React, Node.js) orienté **e-commerce**.
 
 > ⚠️ Pour l’instant, seule la **partie API** est développée.  
@@ -227,6 +229,7 @@ Le modèle `Product` contient les champs suivants :
 - `sass-embedded` : gestion des styles SCSS
 - `react-icons` : bibliothèque d’icônes React
 - `react-transition-group` : bibliothèque d'animations React
+- `swiper` : bibliothèque de carousel
 
 ---
 

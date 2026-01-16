@@ -47,6 +47,26 @@ module.exports.getProduct = async (req, res) => {
   }
 };
 
+module.exports.getSimilarProducts = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const product = await ProductModel.findById(id);
+    if (!product) {
+      return res.status(404).json("Produit non trouvé pour id : " + id);
+    } else {
+      const similarProducts = await ProductModel.find({
+        category: product.category,
+        _id: { $ne: product._id },
+      }).limit(4);
+      res.status(200).json(similarProducts);
+    }
+  } catch (e) {
+    res
+      .status(500)
+      .json("Erreur dans l'affichage des produits similaires : " + e);
+  }
+};
+
 module.exports.setProduct = async (req, res) => {
   try {
     if (!req.body) {

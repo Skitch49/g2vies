@@ -13,6 +13,7 @@ import { Autoplay, Keyboard, Thumbs, Zoom } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/thumbs";
 import "swiper/css/zoom";
+import SimilarProduct from "../../../../components/SimilarProducts/SimilarProduct";
 
 function ShopProduct() {
   const { user } = useContext(AuthContext);
@@ -25,6 +26,7 @@ function ShopProduct() {
     async function fetchProduct(idProduct) {
       try {
         const response = await getProduct(idProduct);
+        console.log(response);
         setProduct(response);
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -32,8 +34,6 @@ function ShopProduct() {
     }
     fetchProduct(idProduct);
   }, [idProduct]);
-
-  console.log(user);
 
   const stockStatus = product?.quantity > 0 ? true : false;
   return (
@@ -135,7 +135,7 @@ function ShopProduct() {
             </p>
           </div>
         </div>
-        <div className="infosDetails">
+        <div>
           <nav
             className={`d-flex flex-row flex-wrap gap-10  ${styles.navInfos}`}
           >
@@ -280,6 +280,7 @@ function ShopProduct() {
             </section>
           )}
         </div>
+        <SimilarProduct productID={product?._id} />
       </main>
     </div>
   );
