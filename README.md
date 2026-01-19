@@ -2,10 +2,12 @@
 
 ![G2vies](./picture_readme.png)
 
-G2vies est un projet **MERN stack** (MongoDB, Express, React, Node.js) orienté **e-commerce**.
+**G2vies** est un projet **MERN Stack (MongoDB, Express, React, Node.js)** orienté **plateforme e-commerce / marketplace**.  
+Ce repository contient à la fois :
 
-> ⚠️ Pour l’instant, seule la **partie API** est développée.  
-> Cette API gère l’authentification, les utilisateurs et les produits, avec une sécurité basée sur **JWT (RS256)** et des rôles administrateur.
+- 📌 Une **API backend** (Express + MongoDB)
+- 📌 Une **application frontend React**
+- 📌 Authentification, gestion des utilisateurs, produits, panier, catégories, etc.
 
 ---
 
@@ -28,9 +30,19 @@ G2vies est un projet **MERN stack** (MongoDB, Express, React, Node.js) orienté 
 
 Clonez le projet et installez les dépendances :
 
+### Backend
+
 ```bash
 git clone https://github.com/Skitch49/g2vies.git
-cd api
+cd g2vies/api
+npm install
+```
+
+### Frontend
+
+```bash
+git clone https://github.com/Skitch49/g2vies.git
+cd ../client
 npm install
 ```
 
@@ -63,6 +75,7 @@ L’API utilise des **tokens JWT signés en RS256**.
 Avant de lancer le serveur, générez les clés RSA dans le dossier keys :
 
 ```bash
+cd api/keys
 node generateKeys.js
 ```
 
@@ -87,6 +100,12 @@ API disponible sur :
 
 ```
 http://localhost:3001/
+```
+
+Et Swagger disponible sur
+
+```
+http://localhost:3001/api-docs/
 ```
 
 ---
@@ -136,13 +155,15 @@ http://localhost:3001/
 
 ### Produits (`/api/products`)
 
-| Méthode | Route  | Accès  | Description                           |
-| ------: | ------ | ------ | ------------------------------------- |
-|     GET | `/`    | Public | Liste des produits (pagination & tri) |
-|     GET | `/:id` | Public | Récupère un produit par ID            |
-|    POST | `/`    | Admin  | Création d’un produit                 |
-|     PUT | `/:id` | Admin  | Modification d’un produit             |
-|  DELETE | `/:id` | Admin  | Suppression d’un produit              |
+| Méthode | Route                  | Accès  | Description                                   |
+| ------: | ---------------------- | ------ | --------------------------------------------- |
+|     GET | `/`                    | Public | Liste des produits (pagination & tri)         |
+|     GET | `/brandsAndCategories` | Public | Liste des marques et catégories               |
+|     GET | `/similarProduct`      | Public | Liste des produits issue de la même catégorie |
+|     GET | `/:id`                 | Public | Récupère un produit par ID                    |
+|    POST | `/`                    | Admin  | Création d’un produit                         |
+|     PUT | `/:id`                 | Admin  | Modification d’un produit                     |
+|  DELETE | `/:id`                 | Admin  | Suppression d’un produit                      |
 
 Paramètres disponibles :
 
@@ -172,24 +193,102 @@ Permet de :
 
 ### Product
 
-Le modèle `Product` contient les champs suivants :
+Le modèle `Product` représente un produit vendu sur la plateforme.
 
-- `name` (String, obligatoire)
-- `description` (String)
-- `price` (Number, obligatoire)
-- `originalPrice` (Number, obligatoire)
-- `quantity` (Number, obligatoire)
-- `category` (String, obligatoire)
-- `brand` (String, obligatoire)
-- `condition` (String, obligatoire) : `Neuf`, `Comme neuf`, `Très bon état`, `Bon état`, `Usagé`, `Reconditionné`
-- `images` (Array de String)
-- `model`, `cpu`, `gpu`, `ram`, `color`, `weight`
-- `storage` : `capacity` (Number), `unit` (Go ou To), `type` (SSD ou HDD)
-- `screenSize`, `operatingSystem`
-- `wifi`, `webcam`, `numpad`, `microphone`, `bluetooth` (Boolean)
-- `connectors` : tableau d'objets `{ name, quantity }`
+#### Champs principaux
 
-> Les timestamps (`createdAt`, `updatedAt`) sont générés automatiquement.
+- `name` (String, **obligatoire**) — Nom du produit
+- `description` (String) — Description du produit
+- `price` (Number, **obligatoire**) — Prix de vente
+- `originalPrice` (Number, **obligatoire**) — Prix d’origine
+- `quantity` (Number, **obligatoire**) — Quantité disponible
+- `category` (String, **obligatoire**) — Catégorie du produit
+- `brand` (String, **obligatoire**) — Marque
+- `condition` (String, **obligatoire**) — État du produit, valeurs possibles :
+  - `Neuf`
+  - `Comme neuf`
+  - `Très bon état`
+  - `Bon état`
+  - `Usagé`
+  - `Reconditionné`
+
+#### Images
+
+- `images` (Array, **obligatoire**) — Tableau d’objets :
+  - `url` (String)
+
+> ⚠️ Au moins **une image est requise**.
+
+#### Caractéristiques techniques
+
+- `model` (String)
+- `cpu` (String)
+- `gpu` (String)
+- `ram` (Number)
+- `color` (String)
+- `weight` (Number)
+
+#### Stockage
+
+- `storage` (Object)
+  - `capacity` (Number)
+  - `unit` (String) — `Go` ou `To`
+  - `type` (String) — `SSD` ou `HDD`
+
+#### Autres spécifications
+
+- `screenSize` (Number)
+- `operatingSystem` (String)
+- `wifi` (Boolean)
+- `webcam` (Boolean)
+- `numpad` (Boolean)
+- `microphone` (Boolean)
+- `bluetooth` (Boolean)
+
+#### Connectique
+
+- `connectors` (Array d’objets)
+  - `name` (String)
+  - `quantity` (Number)
+
+> Les champs `createdAt` et `updatedAt` sont générés automatiquement.
+
+---
+
+### User
+
+Le modèle `User` représente un utilisateur de la plateforme.
+
+#### Informations utilisateur
+
+- `firstname` (String, **obligatoire**) — Prénom
+- `lastname` (String, **obligatoire**) — Nom
+- `email` (String, **obligatoire**, unique) — Email de connexion
+- `password` (String, **obligatoire**) — Mot de passe chiffré
+
+#### Adresses
+
+Les adresses utilisent un sous-schéma commun.
+
+##### Address
+
+- `country` (String, **obligatoire**)
+- `street` (String, **obligatoire**)
+- `building` (String)
+- `postalCode` (String, **obligatoire**)
+- `city` (String, **obligatoire**)
+- `phone` (String)
+
+##### Champs liés à l’utilisateur
+
+- `billingAddress` (Address) — Adresse de facturation
+- `deliveryAddress` (Address) — Adresse de livraison
+
+#### Paiement
+
+- `stripeCustomerId` (String) — Identifiant client Stripe
+
+> Les champs `createdAt` et `updatedAt` sont générés automatiquement.
 
 ---
 
@@ -235,6 +334,6 @@ Le modèle `Product` contient les champs suivants :
 
 ## Remarques
 
-- L’API est en cours de développement
-- Elle constitue la base backend du projet **G2vies**
+- Le projet est en cours de développement
+- L'API constitue la base backend du projet **G2vies**
 - Les futures évolutions incluront l’extension des règles métiers et des fonctionnalités e-commerce

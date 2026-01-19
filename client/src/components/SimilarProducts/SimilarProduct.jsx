@@ -3,9 +3,8 @@ import { useEffect } from "react";
 import { getProducts, getSimilarProducts } from "../../api";
 import styles from "./SimilarProduct.module.scss";
 import { NavLink } from "react-router-dom";
-function SimilarProduct({ productID = "undefined" }) {
+function SimilarProduct({ productID = null }) {
   const [products, setProducts] = useState(null);
-  console.log(productID);
   useEffect(() => {
     if (productID) {
       async function fetchSimilarProducts(productID) {
@@ -16,16 +15,16 @@ function SimilarProduct({ productID = "undefined" }) {
     } else {
       async function fetchProducts() {
         const data = await getProducts(0, 4);
-        setProducts(data);
+        setProducts(data.products);
       }
       fetchProducts();
     }
   }, [productID]);
   return (
     <div
-      className={`${styles.SimilarProductWrapper} d-flex flex-row flex-wrap justify-space-between my-10`}
+      className={`${styles.SimilarProductWrapper} d-flex flex-row flex-wrap justify-content-center `}
     >
-      {products &&
+      {Array.isArray(products) &&
         products.map((product, index) => (
           <div key={index} className="d-flex flex-column">
             <NavLink

@@ -280,6 +280,7 @@ function ShopProduct() {
             </section>
           )}
         </div>
+        <h2 className={styles.titleSimilarProduct}>Produits similaires</h2>
         <SimilarProduct productID={product?._id} />
       </main>
     </div>

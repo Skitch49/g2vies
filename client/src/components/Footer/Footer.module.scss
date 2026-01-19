@@ -1,4 +1,46 @@
 .footer {
-  background-color: var(--gray-1);
+  background-color: var(--black);
   color: white;
+
+  figure {
+    width: 120px;
+    height: auto;
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  svg {
+    width: 35px;
+    height: 35px;
+    color: white;
+    transition:
+      transform 0.3s ease,
+      color 0.3s ease;
+    &:hover {
+      transform: rotate(10deg);
+      color: var(--primary-light);
+    }
+  }
+
+  .footerSection {
+    h4 {
+      margin-bottom: 8px;
+    }
+    ul > li {
+      margin-bottom: 4px;
+      a {
+        color: white;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  .copyright {
+    font-size: 14px;
+    color: var(--text-color-light);
+  }
 }
