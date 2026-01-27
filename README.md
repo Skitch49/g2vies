@@ -173,6 +173,18 @@ Paramètres disponibles :
 
 ---
 
+### Panier (`/api/cart`)
+
+| Méthode | Route         | Description          |
+| ------: | ------------- | -------------------- |
+|     GET | `/`           | Récupérer le panier  |
+|    POST | `/add`        | Ajouter un produit   |
+|   PATCH | `/update`     | Modifier quantité    |
+|  DELETE | `/remove/:id` | Supprimer un produit |
+|  DELETE | `/clear`      | Vider le panier      |
+
+---
+
 ## Swagger Documentation
 
 Documentation interactive disponible à l’adresse :
@@ -289,6 +301,15 @@ Les adresses utilisent un sous-schéma commun.
 - `stripeCustomerId` (String) — Identifiant client Stripe
 
 > Les champs `createdAt` et `updatedAt` sont générés automatiquement.
+
+---
+
+### Cart
+
+- `user` (ObjectId → User)
+- `items` (Array)
+  - `product` (ObjectId → Product)
+  - `quantity` (Number)
 
 ---
 

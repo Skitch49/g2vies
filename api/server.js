@@ -41,6 +41,10 @@ const productsSwagger = YAML.load(
   path.join(__dirname, "swagger/swagger-products.yml")
 );
 
+const cartsSwagger = YAML.load(
+  path.join(__dirname, "swagger/swagger-cart.yml")
+);
+
 const swaggerDocument = {
   openapi: "3.0.0",
   info: {
@@ -52,12 +56,14 @@ const swaggerDocument = {
     ...authSwagger.paths,
     ...usersSwagger.paths,
     ...productsSwagger.paths,
+    ...cartsSwagger.paths,
   },
   components: {
     schemas: {
       ...authSwagger.components?.schemas,
       ...usersSwagger.components?.schemas,
       ...productsSwagger.components?.schemas,
+      ...cartsSwagger.components?.schemas,
     },
   },
 };

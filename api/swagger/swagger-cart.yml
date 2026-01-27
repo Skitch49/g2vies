@@ -1,0 +1,176 @@
+tags:
+  - name: Cart
+    description: Gestion du panier utilisateur (JWT requis)
+
+paths:
+  /cart:
+    get:
+      tags:
+        - Cart
+      summary: Récupérer le panier de l’utilisateur connecté
+      description: Retourne le panier associé à l’utilisateur authentifié
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: Panier récupéré
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        401:
+          description: Non authentifié
+        500:
+          description: Erreur serveur
+
+  /cart/add:
+    post:
+      tags:
+        - Cart
+      summary: Ajouter un produit au panier
+      description: Si le produit existe déjà, la quantité est augmentée
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartAddInput"
+      responses:
+        200:
+          description: Produit ajouté au panier
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        400:
+          description: Données invalides
+        401:
+          description: Non authentifié
+        500:
+          description: Erreur serveur
+
+  /cart/update:
+    patch:
+      tags:
+        - Cart
+      summary: Modifier la quantité d’un produit dans le panier
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartUpdateInput"
+      responses:
+        200:
+          description: Panier mis à jour
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        400:
+          description: Quantité invalide
+        404:
+          description: Panier ou produit introuvable
+        500:
+          description: Erreur serveur
+
+  /cart/remove/{productId}:
+    delete:
+      tags:
+        - Cart
+      summary: Supprimer un produit du panier
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Produit supprimé du panier
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        404:
+          description: Panier ou produit introuvable
+        500:
+          description: Erreur serveur
+
+  /cart/clear:
+    delete:
+      tags:
+        - Cart
+      summary: Vider complètement le panier
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: Panier vidé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        404:
+          description: Panier introuvable
+        500:
+          description: Erreur serveur
+
+components:
+  schemas:
+    CartItem:
+      type: object
+      properties:
+        product:
+          $ref: "#/components/schemas/Product"
+        quantity:
+          type: number
+          example: 2
+
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CartAddInput:
+      type: object
+      required:
+        - productId
+      properties:
+        productId:
+          type: string
+          example: 65c1a12f9a3e4d0012345678
+        quantity:
+          type: number
+          example: 1
+
+    CartUpdateInput:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: number
+          example: 3
