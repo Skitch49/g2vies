@@ -4,6 +4,7 @@ import ShopCard from "./components/ShopCard/ShopCard";
 import ShopMenu from "./components/ShopMenu/ShopMenu";
 import SearchBar from "./components/SearchBar/SearchBar";
 import { Outlet, useMatch } from "react-router-dom";
+import { CartContext } from "../../context";
 
 function Shop() {
   const PRODUCTS_PER_LOAD = 12;

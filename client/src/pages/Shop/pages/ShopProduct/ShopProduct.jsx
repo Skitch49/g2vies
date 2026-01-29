@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { Navigate, NavLink, useNavigate, useParams } from "react-router-dom";
 import { getProduct } from "../../../../api";
 import styles from "./ShopProduct.module.scss";
-import { AuthContext } from "../../../../context";
+import { AuthContext, CartContext } from "../../../../context";
 import { BsCpu } from "react-icons/bs";
 import { RiRamLine } from "react-icons/ri";
 import { MdStorage } from "react-icons/md";
@@ -17,11 +17,14 @@ import SimilarProduct from "../../../../components/SimilarProducts/SimilarProduc
 
 function ShopProduct() {
   const { user } = useContext(AuthContext);
+  const { isLoading, addToCart, isInCart } = useContext(CartContext);
   const [product, setProduct] = useState(null);
   const [navDisplay, setNavDisplay] = useState(false);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   const { idProduct } = useParams();
+  const navigate = useNavigate();
+
   useEffect(() => {
     async function fetchProduct(idProduct) {
       try {
@@ -34,6 +37,17 @@ function ShopProduct() {
     }
     fetchProduct(idProduct);
   }, [idProduct]);
+
+  async function toggleAddToCart(productID) {
+    await addToCart(productID);
+  }
+
+  async function buyProduct(productID) {
+    if (!isInCart(productID)) {
+      await addToCart(productID);
+    }
+    navigate("/cart");
+  }
 
   const stockStatus = product?.quantity > 0 ? true : false;
   return (
@@ -117,14 +131,21 @@ function ShopProduct() {
               <button
                 type="button"
                 className="btn btn-primary"
-                disabled={!stockStatus && !user}
+                disabled={
+                  !stockStatus || !user || isInCart(product?._id) || isLoading
+                }
+                onClick={async () => toggleAddToCart(product?._id)}
               >
-                Ajouter au panier
+                {isInCart(product?._id)
+                  ? "Déjà au panier"
+                  : "Ajouter au panier"}
               </button>
+
               <button
                 type="button"
                 className="btn btn-primary-reverse"
-                disabled={!stockStatus && !user}
+                disabled={!stockStatus || !user}
+                onClick={async () => buyProduct(product?._id)}
               >
                 Acheté
               </button>

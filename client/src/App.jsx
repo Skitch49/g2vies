@@ -6,21 +6,24 @@ import Header from "./components/Header/Header";
 import AuthProvider from "./providers/AuthProvider/AuthProvider";
 import { AlertProvider } from "./providers/AlertProvider/AlertProvider";
 import DisplayAlerts from "./components/DisplayAlerts/DisplayAlerts";
+import CartProvider from "./providers/CartProvider/CartProvider";
 
 function App() {
   return (
-    <div className={`d-flex flex-column ${styles.appContainer}`}>
+    <div className={` ${styles.appContainer}`}>
       <AuthProvider>
         <AlertProvider>
-          <Header />
-          <div className="d-flex flex-fill flex-column">
-            <DisplayAlerts />
+          <CartProvider>
+            <Header />
+            <div className={` flex-fill flex-column ${styles.main}`}>
+              <DisplayAlerts />
 
-            <Suspense>
-              <Outlet />
-            </Suspense>
-          </div>
-          <Footer />
+              <Suspense>
+                <Outlet />
+              </Suspense>
+            </div>
+            <Footer />
+          </CartProvider>
         </AlertProvider>
       </AuthProvider>
     </div>

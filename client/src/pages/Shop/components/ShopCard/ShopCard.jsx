@@ -1,6 +1,10 @@
 import { NavLink } from "react-router-dom";
 import styles from "./ShopCard.module.scss";
+import { useContext } from "react";
+import { CartContext } from "../../../../context";
 function ShopCard({ product }) {
+  const { addToCart, isInCart } = useContext(CartContext);
+
   return (
     <div
       className={`${styles.ShopCard} card d-flex flex-column justify-space-between`}
@@ -38,8 +42,13 @@ function ShopCard({ product }) {
         </div>
       </NavLink>
       <div>
-        <button type="button" className="btn btn-primary">
-          Ajouter au panier
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={isInCart(product?._id)}
+          onClick={async () => addToCart(product?._id)}
+        >
+          {isInCart(product?._id) ? "Déjà au panier" : "Ajouter au panier"}
         </button>
       </div>
     </div>

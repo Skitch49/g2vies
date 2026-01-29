@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
 import { getProducts, getSimilarProducts } from "../../api";
 import styles from "./SimilarProduct.module.scss";
 import { NavLink } from "react-router-dom";
+import { CartContext } from "../../context";
 function SimilarProduct({ productID = null }) {
   const [products, setProducts] = useState(null);
+  const { isLoading, isInCart, addToCart } = useContext(CartContext);
   useEffect(() => {
     if (productID) {
       async function fetchSimilarProducts(productID) {
@@ -40,9 +42,20 @@ function SimilarProduct({ productID = null }) {
               </div>
             </NavLink>
             <div className="d-flex justify-space-around align-items-center">
-              <button type="button" className="btn btn-primary">
-                Ajouter au panier
-              </button>
+              {isInCart(product?._id) ? (
+                <button type="button" className="btn btn-primary">
+                  Déjà au panier
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  disabled={isLoading}
+                  onClick={async () => addToCart(product?._id)}
+                >
+                  Ajouter au panier
+                </button>
+              )}
             </div>
           </div>
         ))}
