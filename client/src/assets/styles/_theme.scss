@@ -1,3 +1,5 @@
+@use "../../assets/styles/mixins" as mixin;
+
 .btn {
   padding: 5px 15px;
   border-radius: var(--border-radius);
@@ -30,6 +32,9 @@
   background-color: white;
   padding: 10px;
   box-shadow: var(--box-shadow);
+  // @include mixin.sm-lt {
+  //   padding: 20px;
+  // }
 }
 
 .text-primary {
@@ -79,4 +84,16 @@ input[type="radio"] {
     width: 24px;
     height: 24px;
   }
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.container-xs {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
 }

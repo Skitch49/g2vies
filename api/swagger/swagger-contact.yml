@@ -1,0 +1,85 @@
+tags:
+  - name: Contact
+    description: Envoie de mails de contact
+
+paths:
+  /contact/:
+    post:
+      summary: Envoyer un message de contact
+      description: Crée un nouveau message de contact et l'envoie par email.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Contact"
+      responses:
+        "201":
+          description: Message envoyé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Message envoyé avec succès"
+                  contact:
+                    $ref: "#/components/schemas/ContactResponse"
+        "500":
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Erreur lors de la creation du contact: ..."
+components:
+  schemas:
+    Contact:
+      type: object
+      required:
+        - from
+        - to
+        - object
+        - message
+      properties:
+        from:
+          type: string
+          format: email
+          example: "alice@example.com"
+        to:
+          type: string
+          format: email
+          example: "bob@example.com"
+        object:
+          type: string
+          example: "Demande d'information"
+        message:
+          type: string
+          example: "Bonjour, je souhaiterais avoir plus d'informations sur vos services."
+    ContactResponse:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "642c7f1a2b5e8c0012345678"
+        from:
+          type: string
+          example: "alice@example.com"
+        to:
+          type: string
+          example: "bob@example.com"
+        object:
+          type: string
+          example: "Demande d'information"
+        message:
+          type: string
+          example: "Bonjour, je souhaiterais avoir plus d'informations sur vos services."
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-02-02T15:30:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-02-02T15:30:00.000Z"

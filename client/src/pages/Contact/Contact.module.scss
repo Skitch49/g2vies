@@ -1,0 +1,21 @@
+.formItem {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  min-width: 250px;
+  textarea {
+    min-height: 200px;
+  }
+}
+.items {
+  margin-bottom: 1rem;
+  padding: 0 20px;
+  span {
+    font-weight: bold;
+  }
+  li,
+  p,
+  h2 {
+    margin-bottom: 5px;
+  }
+}

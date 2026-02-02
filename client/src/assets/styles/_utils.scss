@@ -76,6 +76,23 @@
   margin-top: 30px;
 }
 
+.mx-5 {
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.mx-10 {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.mx-20 {
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.mx-30 {
+  margin-right: 30px;
+  margin-left: 30px;
+}
+
 .gap-5 {
   gap: 5px;
 }
@@ -92,16 +109,14 @@
   gap: 20px;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
-
 .calc {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
+}
+
+.text-center {
+  text-align: center;
 }

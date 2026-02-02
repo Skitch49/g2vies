@@ -56,6 +56,8 @@ Créez un fichier `.env` à la racine du dossier `api` :
 MONGO_URI=<VOTRE_URI_MONGODB>
 PORT=3001
 ADMIN_ID=<ID_UTILISATEUR_ADMIN>
+EMAIL_USER=<EMAIL_ADMIN>
+EMAIL_PASSWORD=<PASSWORD>
 ```
 
 ### Variables d’environnement
@@ -63,6 +65,8 @@ ADMIN_ID=<ID_UTILISATEUR_ADMIN>
 - `MONGO_URI` : URI de connexion MongoDB
 - `PORT` : port du serveur (par défaut `3001`)
 - `ADMIN_ID` : identifiant MongoDB de l’utilisateur administrateur
+- `EMAIL_USER` : email de l'administrateur pour recevoir les mails de la page contact
+- `EMAIL_PASSWORD` : mot de passe pour la réception des mails
 
 > ⚠️ Ne partagez jamais votre fichier `.env` publiquement.
 
@@ -182,6 +186,14 @@ Paramètres disponibles :
 |   PATCH | `/update`     | Modifier quantité    |
 |  DELETE | `/remove/:id` | Supprimer un produit |
 |  DELETE | `/clear`      | Vider le panier      |
+
+---
+
+### Contact (`/api/contact`)
+
+| Méthode | Route | Description      |
+| ------: | ----- | ---------------- |
+|    POST | `/`   | Envoyer un email |
 
 ---
 
@@ -339,6 +351,7 @@ Les adresses utilisent un sous-schéma commun.
 - `yamljs` : lecture de fichiers YAML pour Swagger
 - `cors` : gestion des requêtes cross-origin
 - `sass-embedded` : lecture de fichiers scss pour le css
+- `nodemailer` : envoie d'email
 
 ### Frontend (React)
 

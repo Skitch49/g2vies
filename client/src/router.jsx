@@ -7,49 +7,52 @@ import { rootLoader } from "./loaders/rootLoader";
 const Homepage = lazy(() => import("./pages/Homepage/Homepage"));
 const Shop = lazy(() => import("./pages/Shop/Shop"));
 const Cart = lazy(() => import("./pages/Cart/Cart"));
-const ShopProduct = lazy(() =>
-  import("./pages/Shop/pages/ShopProduct/ShopProduct")
+const Contact = lazy(() => import("./pages/Contact/Contact"));
+const MentionsLegales = lazy(
+  () => import("./pages/MentionsLegales/MentionsLegales"),
+);
+const CGV = lazy(() => import("./pages/CGV/CGV"));
+const ShopProduct = lazy(
+  () => import("./pages/Shop/pages/ShopProduct/ShopProduct"),
 );
 
 const Signup = lazy(() => import("./pages/Signup/Signup"));
 const Signin = lazy(() => import("./pages/Signin/Signin"));
 const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const Profile = lazy(() => import("./pages/Dashboard/pages/Profile/Profile"));
-const ProfileInfos = lazy(() =>
-  import("./pages/Dashboard/pages/Profile/pages/ProfileInfos/ProfileInfos")
+const ProfileInfos = lazy(
+  () =>
+    import("./pages/Dashboard/pages/Profile/pages/ProfileInfos/ProfileInfos"),
 );
-const ProfileEdit = lazy(() =>
-  import("./pages/Dashboard/pages/Profile/pages/ProfileEdit/ProfileEdit")
+const ProfileEdit = lazy(
+  () => import("./pages/Dashboard/pages/Profile/pages/ProfileEdit/ProfileEdit"),
 );
-const ProfilePasswordEdit = lazy(() =>
-  import(
-    "./pages/Dashboard/pages/Profile/pages/ProfilePasswordEdit/ProfilePasswordEdit"
-  )
+const ProfilePasswordEdit = lazy(
+  () =>
+    import("./pages/Dashboard/pages/Profile/pages/ProfilePasswordEdit/ProfilePasswordEdit"),
 );
-const ProtectedRoute = lazy(() =>
-  import("./pages/Dashboard/components/ProtectedRoute/ProtectedRoute")
+const ProtectedRoute = lazy(
+  () => import("./pages/Dashboard/components/ProtectedRoute/ProtectedRoute"),
 );
-const ProtectedAdminRoute = lazy(() =>
-  import("./pages/Dashboard/components/ProtectedAdminRoute/ProtectedAdminRoute")
+const ProtectedAdminRoute = lazy(
+  () =>
+    import("./pages/Dashboard/components/ProtectedAdminRoute/ProtectedAdminRoute"),
 );
 const Admin = lazy(() => import("./pages/Dashboard/pages/Admin/Admin"));
-const Product = lazy(() =>
-  import("./pages/Dashboard/pages/Admin/pages/Product/Product")
+const Product = lazy(
+  () => import("./pages/Dashboard/pages/Admin/pages/Product/Product"),
 );
-const ProductList = lazy(() =>
-  import(
-    "./pages/Dashboard/pages/Admin/pages/Product/pages/ProductList/ProductList"
-  )
+const ProductList = lazy(
+  () =>
+    import("./pages/Dashboard/pages/Admin/pages/Product/pages/ProductList/ProductList"),
 );
-const ProductAdd = lazy(() =>
-  import(
-    "./pages/Dashboard/pages/Admin/pages/Product/pages/ProductAdd/ProductAdd"
-  )
+const ProductAdd = lazy(
+  () =>
+    import("./pages/Dashboard/pages/Admin/pages/Product/pages/ProductAdd/ProductAdd"),
 );
-const ProductEdit = lazy(() =>
-  import(
-    "./pages/Dashboard/pages/Admin/pages/Product/pages/ProductEdit/ProductEdit"
-  )
+const ProductEdit = lazy(
+  () =>
+    import("./pages/Dashboard/pages/Admin/pages/Product/pages/ProductEdit/ProductEdit"),
 );
 
 export const router = createBrowserRouter([
@@ -67,6 +70,9 @@ export const router = createBrowserRouter([
       { path: "signup", element: <Signup /> },
       { path: "signin", element: <Signin /> },
       { path: "cart", element: <Cart /> },
+      { path: "contact", element: <Contact /> },
+      { path: "mentions-legales", element: <MentionsLegales /> },
+      { path: "cgv", element: <CGV /> },
       {
         path: "dashboard",
         element: (

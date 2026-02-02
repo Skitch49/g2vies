@@ -16,10 +16,16 @@ function CartProvider({ children }) {
     async function fetchProduct() {
       setIsLoading(true);
 
-      const data = await getCart();
-      console.log(data);
-      setCart(data || { items: [] });
-      setIsLoading(false);
+      try {
+        const data = await getCart();
+        console.log(data);
+        setCart(data || { items: [] });
+      } catch (error) {
+        console.error("Erreur getCart:", error);
+        setCart({ items: [] });
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     fetchProduct();

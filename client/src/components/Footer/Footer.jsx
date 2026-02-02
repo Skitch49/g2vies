@@ -30,13 +30,13 @@ function Footer() {
           <h4>BESOIN D'AIDE ?</h4>
           <ul>
             <li>
-              <NavLink to="/">Contact</NavLink>
+              <NavLink to="/contact">Contact</NavLink>
             </li>
             <li>
-              <NavLink to="/">Mentions légales</NavLink>
+              <NavLink to="/mentions-legales">Mentions légales</NavLink>
             </li>
             <li>
-              <NavLink to="/">Conditions Générales de Ventes (CGV)</NavLink>
+              <NavLink to="/cgv">Conditions Générales de Ventes (CGV)</NavLink>
             </li>
           </ul>
         </div>

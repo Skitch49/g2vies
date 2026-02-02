@@ -12,7 +12,7 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-  })
+  }),
 );
 
 const routes = require("./routes/index");
@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
   res
     .status(200)
     .json(
-      "Bienvenue sur l'API de G2Vies ! Veuillez vous rendre sur /api pour plus d'information sinon aller sur /api-docs pour utilisé swagger."
+      "Bienvenue sur l'API de G2Vies ! Veuillez vous rendre sur /api pour plus d'information sinon aller sur /api-docs pour utilisé swagger.",
     );
 });
 
@@ -34,15 +34,19 @@ const path = require("path");
 const authSwagger = YAML.load(path.join(__dirname, "swagger/swagger-auth.yml"));
 
 const usersSwagger = YAML.load(
-  path.join(__dirname, "swagger/swagger-users.yml")
+  path.join(__dirname, "swagger/swagger-users.yml"),
 );
 
 const productsSwagger = YAML.load(
-  path.join(__dirname, "swagger/swagger-products.yml")
+  path.join(__dirname, "swagger/swagger-products.yml"),
 );
 
 const cartsSwagger = YAML.load(
-  path.join(__dirname, "swagger/swagger-cart.yml")
+  path.join(__dirname, "swagger/swagger-cart.yml"),
+);
+
+const contactsSwagger = YAML.load(
+  path.join(__dirname, "swagger/swagger-contact.yml"),
 );
 
 const swaggerDocument = {
@@ -57,6 +61,7 @@ const swaggerDocument = {
     ...usersSwagger.paths,
     ...productsSwagger.paths,
     ...cartsSwagger.paths,
+    ...contactsSwagger.paths,
   },
   components: {
     schemas: {
@@ -64,6 +69,7 @@ const swaggerDocument = {
       ...usersSwagger.components?.schemas,
       ...productsSwagger.components?.schemas,
       ...cartsSwagger.components?.schemas,
+      ...contactsSwagger.components?.schemas,
     },
   },
 };
@@ -76,5 +82,5 @@ app.use((req, res) => {
 });
 
 app.listen(process.env.PORT, () =>
-  console.log("Le serveur a démarré au port " + process.env.PORT)
+  console.log("Le serveur a démarré au port " + process.env.PORT),
 );
