@@ -353,6 +353,7 @@ Les adresses utilisent un sous-schéma commun.
 - `cors` : gestion des requêtes cross-origin
 - `sass-embedded` : lecture de fichiers scss pour le css
 - `nodemailer` : envoie d'email
+- `stripe` : paiement en ligne
 
 ### Frontend (React)
 

@@ -7,6 +7,13 @@ import { rootLoader } from "./loaders/rootLoader";
 const Homepage = lazy(() => import("./pages/Homepage/Homepage"));
 const Shop = lazy(() => import("./pages/Shop/Shop"));
 const Cart = lazy(() => import("./pages/Cart/Cart"));
+const Stripe = lazy(() => import("./pages/Stripe/Stripe"));
+const StripeCancel = lazy(
+  () => import("./pages/Stripe/pages/StripeCancel/StripeCancel"),
+);
+const StripeSuccess = lazy(
+  () => import("./pages/Stripe/pages/StripeSuccess/StripeSuccess"),
+);
 const Contact = lazy(() => import("./pages/Contact/Contact"));
 const MentionsLegales = lazy(
   () => import("./pages/MentionsLegales/MentionsLegales"),
@@ -72,6 +79,18 @@ export const router = createBrowserRouter([
       },
       { path: "signup", element: <Signup /> },
       { path: "signin", element: <Signin /> },
+      {
+        path: "stripe",
+        element: (
+          <ProtectedRoute>
+            <Stripe />
+          </ProtectedRoute>
+        ),
+        children: [
+          { path: "success", element: <StripeSuccess /> },
+          { path: "cancel", element: <StripeCancel /> },
+        ],
+      },
       { path: "cart", element: <Cart /> },
       { path: "contact", element: <Contact /> },
       { path: "mentions-legales", element: <MentionsLegales /> },

@@ -5,12 +5,16 @@ require("./database");
 const app = express();
 const cors = require("cors");
 
+// webhook Stripe a ne pas déplacer !
+const webhookRoute = require("./routes/api/stripeWebhook.routes");
+app.use("/api/stripe", webhookRoute);
+
 app.use(express.json());
 app.use(cookie());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     credentials: true,
   }),
 );

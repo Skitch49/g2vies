@@ -3,6 +3,7 @@ import { AuthContext, CartContext } from "../../context";
 import { NavLink } from "react-router-dom";
 import styles from "./Cart.module.scss";
 import Loader from "../../components/Loader/Loader";
+import { createCheckoutSession } from "../../api/stripe";
 
 function Cart() {
   const { user } = useContext(AuthContext);
@@ -28,6 +29,13 @@ function Cart() {
     }, 0);
   }, [cart]);
 
+  // Stripe
+  async function handleCheckout() {
+    console.log(cart);
+    console.log(user);
+    const session = await createCheckoutSession(cart, user);
+    window.location.assign(session.url);
+  }
   return (
     <div
       className={`container d-flex flex-column justify-content-center flex-fill `}
@@ -156,9 +164,9 @@ function Cart() {
             <div
               className={`${styles.wrapperTotal} d-flex justify-space-between mt-10`}
             >
-              <NavLink to="/payment" className="btn btn-primary">
+              <button onClick={handleCheckout} className="btn btn-primary">
                 Passer au paiement
-              </NavLink>
+              </button>
               <h4>
                 Sous-total ({cart.items.length} article
                 {cart.items.length > 1 ? "s" : ""}) {total.toFixed(2)} €

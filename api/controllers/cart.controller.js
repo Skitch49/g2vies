@@ -44,7 +44,7 @@ module.exports.setCart = async (req, res) => {
       });
     } else {
       const itemIndex = cart.items.findIndex(
-        (item) => item.product.toString() === productId
+        (item) => item.product.toString() === productId,
       );
       //   Si le produit est déjà dans le panier
       if (itemIndex > -1) {
@@ -89,7 +89,7 @@ module.exports.editCart = async (req, res) => {
     }
 
     const item = cart.items.find(
-      (item) => item.product._id.toString() === productId
+      (item) => item.product._id.toString() === productId,
     );
 
     if (!item) {
@@ -119,7 +119,7 @@ module.exports.editCart = async (req, res) => {
     res
       .status(500)
       .json(
-        "Erreur lors de la modification de la quantité au panier : " + error
+        "Erreur lors de la modification de la quantité au panier : " + error,
       );
   }
 };
@@ -135,7 +135,7 @@ module.exports.removeFromCart = async (req, res) => {
     }
 
     cart.items = cart.items.filter(
-      (item) => item.product.toString() !== productId
+      (item) => item.product.toString() !== productId,
     );
     await cart.save();
     cart = await cart.populate("items.product");
