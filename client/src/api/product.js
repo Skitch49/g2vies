@@ -73,8 +73,8 @@ export async function getSimilarProducts(productID) {
   }
 }
 
-export async function getBrandsAndCategories() {
-  const response = await fetch(`${PRODUCT_API}/brandsAndCategories`);
+export async function getBrandsAndCategoriesAndCpu() {
+  const response = await fetch(`${PRODUCT_API}/brandsAndCategoriesAndCpu`);
   const body = await response.json();
   if (response.ok) {
     return body;

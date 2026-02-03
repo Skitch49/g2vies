@@ -4,7 +4,7 @@ import ToggleInput from "../../../../../../../../components/ToggleInput/ToggleIn
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
-  getBrandsAndCategories,
+  getBrandsAndCategoriesAndCpu,
   getProduct,
   updateProduct,
 } from "../../../../../../../../api";
@@ -17,17 +17,19 @@ import { useNavigate, useParams } from "react-router-dom";
 function ProductEdit() {
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [cpuFamilies, setCpuFamilies] = useState([]);
 
   const [product, setProduct] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function getAllBrandsAndCategories() {
+    async function getListDetailsProducts() {
       try {
-        const data = await getBrandsAndCategories();
+        const data = await getBrandsAndCategoriesAndCpu();
         setBrands(data.brands);
         setCategories(data.categories);
+        setCpuFamilies(data.cpuFamilies);
       } catch (error) {
         console.error("Error fetching brands and categories:", error);
         addAlert({
@@ -42,6 +44,7 @@ function ProductEdit() {
         setProduct(data);
         reset({
           name: data.name ?? "",
+          titleDescription: data?.titleDescription || "",
           description: data.description ?? "",
           price: data.price ?? null,
           originalPrice: data.originalPrice ?? null,
@@ -58,7 +61,8 @@ function ProductEdit() {
           connectors: data.connectors ?? [],
 
           model: data.model ?? "",
-          cpu: data.cpu ?? "",
+          cpuFamily: data.cpuFamily ?? "",
+          cpuModel: data.cpuModel ?? "",
           gpu: data.gpu ?? "",
           ram: data.ram ?? null,
           color: data.color ?? "",
@@ -87,7 +91,7 @@ function ProductEdit() {
         });
       }
     }
-    getAllBrandsAndCategories();
+    getListDetailsProducts();
     fetchProduct();
   }, [id]);
 
@@ -100,6 +104,7 @@ function ProductEdit() {
       .min(3, "Le nom du produit doit contenir au moins 3 caractères.")
       .max(100, "Le nom du produit ne peut pas dépasser 100 caractères."),
 
+    titleDescription: yup.string().nullable(),
     description: yup.string().nullable(),
 
     originalPrice: yup
@@ -122,7 +127,7 @@ function ProductEdit() {
           if (value == null || originalPrice == null) return true;
 
           return Number(originalPrice) >= Number(value);
-        }
+        },
       ),
 
     quantity: yup
@@ -162,7 +167,7 @@ function ProductEdit() {
           "Usagé",
           "Reconditionné",
         ],
-        "Condition invalide."
+        "Condition invalide.",
       ),
 
     images: yup
@@ -171,12 +176,19 @@ function ProductEdit() {
       .of(
         yup.object({
           url: yup.string().url("URL invalide").required("Image obligatoire"),
-        })
+        }),
       ),
 
     model: yup.string().nullable(),
 
-    cpu: yup.string().nullable(),
+    cpuFamily: yup.string().nullable(),
+    customCpuFamily: yup.string().when("cpuFamily", {
+      is: "other",
+      then: (schema) =>
+        schema.required("Veuillez renseigner le nouveau modèle de cpu."),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    cpuModel: yup.string().nullable(),
 
     gpu: yup.string().nullable(),
 
@@ -184,7 +196,7 @@ function ProductEdit() {
       .number()
       .typeError("La RAM doit être un nombre.")
       .transform((value, originalValue) =>
-        originalValue === "" ? null : value
+        originalValue === "" ? null : value,
       )
       .nullable()
       .min(1, "La RAM doit être supérieure à 0."),
@@ -193,7 +205,7 @@ function ProductEdit() {
     weight: yup
       .number()
       .transform((value, originalValue) =>
-        originalValue === "" ? null : value
+        originalValue === "" ? null : value,
       )
       .nullable()
       .typeError("Le poids doit être un nombre.")
@@ -241,7 +253,7 @@ function ProductEdit() {
           .required("La quantité est obligatoire.")
           .integer("La quantité doit être un nombre entier.")
           .min(1, "La quantité doit être au minimum 1."),
-      })
+      }),
     ),
   });
 
@@ -261,6 +273,7 @@ function ProductEdit() {
   const connectors = useFieldArray({ control, name: "connectors" });
   const selectedCategory = watch("category");
   const selectedBrand = watch("brand");
+  const selectedCpuFamily = watch("cpuFamily");
 
   function addImage() {
     images.append({
@@ -313,6 +326,13 @@ function ProductEdit() {
           <label htmlFor="name">Nom</label>
           <input {...register("name")} type="text" id="name" />
           {errors.name && <p className="form-error">{errors.name.message}</p>}
+        </div>
+        <div className="d-flex flex-column mb-5">
+          <label htmlFor="titleDescription">Titre de la description</label>
+          <input {...register("titleDescription")} id="titleDescription" />
+          {errors.titleDescription && (
+            <p className="form-error">{errors.titleDescription.message}</p>
+          )}
         </div>
         <div className="d-flex flex-column mb-5">
           <label htmlFor="description">description</label>
@@ -470,9 +490,51 @@ function ProductEdit() {
           </button>
         </div>
         <div className="d-flex flex-column mb-5">
-          <label htmlFor="cpu">Processeur</label>
-          <input {...register("cpu")} type="text" id="cpu" />
-          {errors.cpu && <p className="form-error">{errors.cpu.message}</p>}
+          <label htmlFor="cpuFamily">Modèle du Processeur</label>
+          <select {...register("cpuFamily")} id="cpuFamily">
+            <option value="" disabled>
+              Sélectionne un processeur
+            </option>
+            {cpuFamilies &&
+              cpuFamilies.map((cpu, index) => (
+                <option key={index} value={cpu}>
+                  {cpu}
+                </option>
+              ))}
+
+            <option value="other">Autre</option>
+          </select>
+          {selectedCpuFamily === "other" && (
+            <div className="d-flex flex-column mt-5">
+              <label htmlFor="customCpuFamily">
+                Nouveau modèle du processeur
+              </label>
+              <input
+                {...register("customCpuFamily")}
+                type="text"
+                id="customCpuFamily"
+                placeholder="Intel Core i9"
+              />
+              {errors.customCpuFamily && (
+                <p className="form-error">{errors.customCpuFamily.message}</p>
+              )}
+            </div>
+          )}
+          {errors.cpuFamily && (
+            <p className="form-error">{errors.cpuFamily.message}</p>
+          )}
+        </div>
+        <div className="d-flex flex-column mb-5">
+          <label htmlFor="cpuModel">Modèle précis du cpu</label>
+          <input
+            {...register("cpuModel")}
+            type="text"
+            id="cpuModel"
+            placeholder="6600k"
+          />
+          {errors.cpuModel && (
+            <p className="form-error">{errors.cpuModel.message}</p>
+          )}
         </div>
         <div className="d-flex flex-column mb-5">
           <label htmlFor="gpu">Carte graphique</label>

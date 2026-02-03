@@ -28,7 +28,7 @@ function ShopCard({ product }) {
             </div>
             <h2>{product.name}</h2>
             <div className={styles.wrapperInfo}>
-              <strong>{product.cpu}</strong>
+              <strong>{product.cpuFamily}</strong>
               {product.screenSize && (
                 <strong>{product.screenSize} pouces</strong>
               )}

@@ -223,7 +223,9 @@ components:
             type: string
         model:
           type: string
-        cpu:
+        cpuFamily:
+          type: string
+        cpuModel:
           type: string
         gpu:
           type: string
@@ -309,7 +311,9 @@ components:
             type: string
         model:
           type: string
-        cpu:
+        cpuFamily:
+          type: string
+        cpuModel:
           type: string
         gpu:
           type: string

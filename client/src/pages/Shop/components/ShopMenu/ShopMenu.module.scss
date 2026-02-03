@@ -12,9 +12,7 @@
   h3 {
     color: var(--primary);
   }
-  h1 {
-    margin-bottom: 1.5rem;
-  }
+
   h3 {
     margin-bottom: 6px;
   }
@@ -31,5 +29,74 @@
   label {
     cursor: pointer;
     margin-bottom: 0;
+  }
+}
+.arrowIcon {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: var(--primary);
+  transform: rotate(0deg);
+  transition: transform 0.4s ease;
+  &.arrowIconUp {
+    transform: rotate(180deg);
+  }
+}
+.wrapperItem {
+  margin-top: 1.5rem;
+  overflow: hidden;
+  max-height: 2000px; // assez grand pour le contenu
+  transition:
+    max-height 0.4s ease,
+    opacity 0.4s ease,
+    margin-top 0.4s ease;
+  opacity: 1;
+  &.wrapperItemClose {
+    margin-top: 0;
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none; // empêche les interactions quand fermé
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .ShopMenu,
+  .wrapperShopMenu {
+    width: auto !important;
+  }
+  .ShopMenu {
+    display: flex;
+    margin: 1rem;
+    flex-direction: column;
+  }
+  .wrapperItem {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    .item {
+      padding: 10px;
+    }
+  }
+  .arrowIcon {
+    display: flex;
+  }
+  h1 {
+    text-align: center;
+  }
+}
+@media screen and (max-width: 450px) {
+  .wrapperItem {
+    grid-template-columns: repeat(2, 1fr);
+    .item {
+      padding: 5px;
+    }
+  }
+}
+@media screen and (max-width: 320px) {
+  .wrapperItem {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .ShopMenu {
+    align-items: center;
   }
 }

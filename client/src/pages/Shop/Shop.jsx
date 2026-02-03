@@ -1,24 +1,32 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { getProducts } from "../../api";
 import ShopCard from "./components/ShopCard/ShopCard";
 import ShopMenu from "./components/ShopMenu/ShopMenu";
 import SearchBar from "./components/SearchBar/SearchBar";
 import { Outlet, useMatch } from "react-router-dom";
-import { CartContext } from "../../context";
-
+import styles from "./Shop.module.scss";
 function Shop() {
   const PRODUCTS_PER_LOAD = 12;
   const [products, setProducts] = useState([]);
   const [visibleCount, setVisibleCount] = useState(PRODUCTS_PER_LOAD);
   const [searchBar, setSearchBar] = useState("");
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState({
+    category: [],
+    condition: [],
+    cpuFamily: [],
+    ram: [],
+    storage: [],
+    screenSize: [],
+  });
 
-  const loaderRef = useRef(null);
+  const isCategoryPage = useMatch("/boutique/categorie-produit/:nameCategory");
+  const categoryFromUrl = isCategoryPage?.params?.nameCategory;
 
   useEffect(() => {
     async function fetchAllProducts() {
       try {
         const response = await getProducts();
+
         setProducts(response.products);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -27,65 +35,63 @@ function Shop() {
     fetchAllProducts();
   }, []);
 
+  useEffect(() => {
+    function changeFilter() {
+      setFilters({
+        category: categoryFromUrl ? [categoryFromUrl] : [],
+        condition: [],
+        cpuFamily: [],
+        ram: [],
+        storage: [],
+        screenSize: [],
+      });
+    }
+    changeFilter();
+  }, [categoryFromUrl]);
+
   function searchProduct(event) {
     setSearchBar(event.target.value.toLowerCase());
   }
 
   const filteredProducts = products.filter((product) => {
-    // --- SEARCH BAR ---
+    // SEARCH BAR
     if (searchBar) {
-      const productText = `
-        ${product.category}
-        ${product.name}
-        ${product.condition}
-        ${product.description}
-        ${product.brand}
-        ${product.cpu}
-        ${product.gpu}
-        ${product.ram}go
-        ${product.color}
-        ${product.model}
-        ${product.screenSize}pouces
-        ${product.operatingSystem}
-        ${product.storage?.capacity}${product.storage?.unit}
-      `.toLowerCase();
+      const text = `
+      ${product.category}
+      ${product.name}
+      ${product.condition}
+      ${product.description}
+      ${product.brand}
+      ${product.cpuFamily}
+      ${product.cpuModel}
+      ${product.gpu}
+      ${product.ram}go
+      ${product.color}
+      ${product.model}
+      ${product.screenSize}pouces
+      ${product.operatingSystem}
+      ${product.storage?.capacity}${product.storage?.unit}
+    `.toLowerCase();
 
-      const searchWords = searchBar.split(" ").filter(Boolean);
+      const words = searchBar.split(" ").filter(Boolean);
+      if (!words.every((word) => text.includes(word))) return false;
+    }
 
-      if (!searchWords.every((word) => productText.includes(word))) {
+    // FILTERS
+    for (const key in filters) {
+      if (!filters[key]?.length) continue;
+
+      let productValue = product[key];
+
+      // cas spécial stockage
+      if (key === "storage") {
+        productValue = `${product.storage?.capacity}${product.storage?.unit}`;
+      }
+
+      if (!filters[key].includes(productValue)) {
         return false;
       }
     }
-
-    // --- FILTERS MENU ---
-    if (
-      filters.condition?.length &&
-      !filters.condition.includes(product.condition)
-    )
-      return false;
-
-    if (filters.cpu?.length && !filters.cpu.includes(product.cpu)) return false;
-
-    if (filters.ram?.length && !filters.ram.includes(product.ram)) return false;
-
-    if (
-      filters.storage?.length &&
-      !filters.storage.includes(
-        `${product.storage?.capacity}${product.storage?.unit}`
-      )
-    )
-      return false;
-
-    if (
-      filters.screenSize?.length &&
-      !filters.screenSize.includes(product.screenSize)
-    )
-      return false;
-    if (
-      filters.category?.length &&
-      !filters.category.includes(product.category)
-    )
-      return false;
 
     return true;
   });
@@ -93,50 +99,22 @@ function Shop() {
 
   function onFilterChange(name, value, checked) {
     setFilters((prev) => {
-      const values = prev[name] || [];
-      if (name === "storage") {
-        const valueStr = `${value.capacity}${value.unit}`;
-        return {
-          ...prev,
-          [name]: checked
-            ? [...values, valueStr]
-            : values.filter((v) => v !== valueStr),
-        };
-      }
+      const current = prev[name] || [];
+      const finalValue =
+        name === "storage" ? `${value.capacity}${value.unit}` : value;
+
       return {
         ...prev,
         [name]: checked
-          ? [...values, value]
-          : values.filter((v) => v !== value),
+          ? [...current, finalValue]
+          : current.filter((v) => v !== finalValue),
       };
     });
   }
 
-  useEffect(() => {
-    if (!loaderRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const firstEntry = entries[0];
-
-        if (
-          firstEntry.isIntersecting &&
-          visibleCount < filteredProducts.length
-        ) {
-          setVisibleCount((prev) => prev + PRODUCTS_PER_LOAD);
-        }
-      },
-      {
-        root: null,
-        rootMargin: "100px",
-        threshold: 0,
-      }
-    );
-
-    observer.observe(loaderRef.current);
-
-    return () => observer.disconnect();
-  }, [visibleCount, filteredProducts.length]);
+  function addMoreVisibilityProduct() {
+    setVisibleCount((prev) => prev + PRODUCTS_PER_LOAD);
+  }
 
   const isProductPage = useMatch("/boutique/:idProduct");
 
@@ -151,15 +129,35 @@ function Shop() {
             onInput={searchProduct}
             count={filteredProducts.length}
           />
-          <main className="flex-fill d-flex flex-row gap-10">
-            <ShopMenu products={products} onFilterChange={onFilterChange} />
-            <div className="container-cards">
-              <div className="wrapper-cards d-flex flex-row flex-wrap gap-10 mb-20">
-                {products &&
+          <main className={`${styles.wrapperShop} flex-fill d-flex gap-10`}>
+            <ShopMenu
+              products={products}
+              filters={filters}
+              onFilterChange={onFilterChange}
+            />
+            <div className=" flex-fill">
+              <div
+                className={`${styles.wrapperCard} d-flex flex-wrap gap-10 mb-20 flex-fill`}
+              >
+                {products && filteredProducts.length ? (
                   visibleProducts.map((product) => (
                     <ShopCard key={product._id} product={product} />
-                  ))}
-                <div ref={loaderRef} style={{ height: "1px" }}></div>
+                  ))
+                ) : (
+                  <div className="d-flex flex-fill align-items-center justify-content-center p-20 mt-20">
+                    <p>Aucun article trouvé</p>
+                  </div>
+                )}
+                {filteredProducts.length > visibleProducts.length && (
+                  <div className="d-flex flex-fill align-items-center justify-content-center">
+                    <button
+                      className="btn btn-secondary"
+                      onClick={addMoreVisibilityProduct}
+                    >
+                      Charger plus
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </main>

@@ -19,6 +19,7 @@ function ShopProduct() {
   const { user } = useContext(AuthContext);
   const { isLoading, addToCart, isInCart } = useContext(CartContext);
   const [product, setProduct] = useState(null);
+  const [hasSimilarProducts, setHasSimilarProducts] = useState(false);
   const [navDisplay, setNavDisplay] = useState(false);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
@@ -111,7 +112,7 @@ function ShopProduct() {
             <h2 className={styles.price}>{product?.price} €</h2>
             <ul className={styles.productInfos}>
               <li>
-                <BsCpu /> Processeur : {product?.cpu}
+                <BsCpu /> Processeur : {product?.cpuFamily}
               </li>
               <li>
                 <RiRamLine />
@@ -178,9 +179,9 @@ function ShopProduct() {
           </nav>
           {product?.description && navDisplay ? (
             <section className={styles.description}>
-              <h2 className="mb-10">
-                Un ultrabook puissant, compact et fiable
-              </h2>
+              {product?.titleDescription && (
+                <h2 className="mb-10">{product?.titleDescription}</h2>
+              )}
               <p>{product?.description}</p>
             </section>
           ) : (
@@ -188,8 +189,10 @@ function ShopProduct() {
               <table>
                 <tbody>
                   <tr>
-                    <th>Processeur</th>
-                    <td>{product?.cpu}</td>
+                    <th>Modèle du processeur</th>
+                    <td>
+                      {product?.cpuFamily} {product?.cpuModel}
+                    </td>
                   </tr>
                   {product?.gpu && (
                     <tr>
@@ -301,8 +304,13 @@ function ShopProduct() {
             </section>
           )}
         </div>
-        <h2 className={styles.titleSimilarProduct}>Produits similaires</h2>
-        <SimilarProduct productID={product?._id} />
+        {hasSimilarProducts && (
+          <h2 className={styles.titleSimilarProduct}>Produits similaires</h2>
+        )}
+        <SimilarProduct
+          productID={product?._id}
+          onHasProducts={setHasSimilarProducts}
+        />
       </main>
     </div>
   );

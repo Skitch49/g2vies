@@ -18,7 +18,6 @@ function CartProvider({ children }) {
 
       try {
         const data = await getCart();
-        console.log(data);
         setCart(data || { items: [] });
       } catch (error) {
         console.error("Erreur getCart:", error);

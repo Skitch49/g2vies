@@ -1,0 +1,9 @@
+@media screen and (max-width: 500px) {
+  .wrapperShop {
+    flex-direction: column;
+  }
+  .wrapperCard {
+    display: flex;
+    justify-content: center;
+  }
+}

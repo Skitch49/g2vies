@@ -4,6 +4,10 @@ import { AuthContext } from "../../../../../../context";
 
 function ProfileInfos() {
   const { user } = useContext(AuthContext);
+  console.log(user);
+  const formattedDate = user?.createdAt
+    ? new Date(user.createdAt).toLocaleDateString("fr-FR")
+    : "";
 
   return (
     <div className={`${styles.profileContainer} card p-20`}>
@@ -12,6 +16,7 @@ function ProfileInfos() {
         <li>Prénom : {user.firstname}</li>
         <li>Nom : {user.lastname}</li>
         <li>Email : {user.email}</li>
+        {formattedDate && <li>Date de creation : {formattedDate}</li>}
       </ul>
     </div>
   );

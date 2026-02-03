@@ -168,7 +168,7 @@ function AsideMenu({ handleMenu, openMenu, ref }) {
                 }
               </NavLink>
               <NavLink
-                to="/dashboard/profile/cart"
+                to="/dashboard/cart"
                 className={({ isActive }) =>
                   isActive
                     ? `${styles.navlinkXs} ${styles.activeXs}`

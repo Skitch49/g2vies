@@ -165,7 +165,10 @@ function Homepage() {
             </figure>
             <div>
               <h2>Ordinateurs portables</h2>
-              <NavLink to="/boutique" className="btn btn-primary">
+              <NavLink
+                to="/boutique/categorie-produit/PC%20Portables"
+                className="btn btn-primary"
+              >
                 Acheter maintenant
               </NavLink>
             </div>
@@ -177,7 +180,10 @@ function Homepage() {
             <div>
               <h2>Ordinateurs fixes</h2>
 
-              <NavLink to="/boutique" className="btn btn-primary">
+              <NavLink
+                to="/boutique/categorie-produit/PC%20Fixes"
+                className="btn btn-primary"
+              >
                 Acheter maintenant
               </NavLink>
             </div>

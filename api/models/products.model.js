@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const productsSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
+    titleDescription: { type: String },
     description: { type: String },
     price: { type: Number, required: true },
     originalPrice: { type: Number, required: true },
@@ -31,7 +32,11 @@ const productsSchema = mongoose.Schema(
     model: {
       type: String,
     },
-    cpu: {
+    cpuFamily: {
+      type: String,
+      required: true,
+    },
+    cpuModel: {
       type: String,
     },
     gpu: {
@@ -83,7 +88,7 @@ const productsSchema = mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Product", productsSchema);

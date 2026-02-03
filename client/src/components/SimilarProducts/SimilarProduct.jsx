@@ -4,24 +4,23 @@ import { getProducts, getSimilarProducts } from "../../api";
 import styles from "./SimilarProduct.module.scss";
 import { NavLink } from "react-router-dom";
 import { CartContext } from "../../context";
-function SimilarProduct({ productID = null }) {
+function SimilarProduct({ productID = null, onHasProducts }) {
   const [products, setProducts] = useState(null);
   const { isLoading, isInCart, addToCart } = useContext(CartContext);
   useEffect(() => {
-    if (productID) {
-      async function fetchSimilarProducts(productID) {
-        const data = await getSimilarProducts(productID);
-        setProducts(data);
+    async function fetchData() {
+      let data = [];
+      if (productID) {
+        data = await getSimilarProducts(productID);
+      } else {
+        const res = await getProducts(0, 4);
+        data = res.products;
       }
-      fetchSimilarProducts(productID);
-    } else {
-      async function fetchProducts() {
-        const data = await getProducts(0, 4);
-        setProducts(data.products);
-      }
-      fetchProducts();
+      setProducts(data);
+      onHasProducts?.(Array.isArray(data) && data.length > 0);
     }
-  }, [productID]);
+    fetchData();
+  }, [productID, onHasProducts]);
   return (
     <div
       className={`${styles.SimilarProductWrapper} d-flex flex-row flex-wrap justify-content-center `}

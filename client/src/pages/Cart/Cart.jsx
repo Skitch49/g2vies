@@ -42,7 +42,7 @@ function Cart() {
       {cart && cart.items.length < 1 && !isLoading && (
         <div className={`card d-flex flex-row m-10 ${styles.cardCart}`}>
           <figure className={styles.CartLogo}>
-            <img src="cart_empty.png" alt="Panier vide" />
+            <img src="/cart_empty.png" alt="Panier vide" />
           </figure>
           <div className="content d-flex flex-column flex-wrap">
             <h1>Votre panier est vide !</h1>
@@ -111,7 +111,7 @@ function Cart() {
                     </div>
 
                     <div className="d-flex align-items-center flex-row gap-10">
-                      <label htmlFor="quantity">
+                      <label htmlFor={`quantity-${item._id}`}>
                         Quantité*
                         <div className={styles.wrapperQuantity}>
                           <button
@@ -123,7 +123,7 @@ function Cart() {
                           </button>
                           <input
                             type="text"
-                            id="quantity"
+                            id={`quantity-${item._id}`}
                             readOnly
                             value={item?.quantity}
                           />

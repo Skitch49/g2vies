@@ -3,6 +3,7 @@ import { FaLinkedin } from "react-icons/fa";
 import styles from "./Footer.module.scss";
 import { NavLink } from "react-router-dom";
 function Footer() {
+  const year = new Date().getFullYear();
   return (
     <footer
       className={`${styles.footer} d-flex flex-column align-items-center justify-content-center p-20`}
@@ -43,7 +44,7 @@ function Footer() {
       </div>
       <div>
         <p className={styles.copyright}>
-          © 2025 Ordinateurs portables reconditionnés Tous droits réservés.
+          © {year} Ordinateurs portables reconditionnés Tous droits réservés.
         </p>
       </div>
     </footer>

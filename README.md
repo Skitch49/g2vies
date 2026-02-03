@@ -246,7 +246,8 @@ Le modèle `Product` représente un produit vendu sur la plateforme.
 #### Caractéristiques techniques
 
 - `model` (String)
-- `cpu` (String)
+- `cpuFamily` (String)
+- `cpuModel` (String)
 - `gpu` (String)
 - `ram` (Number)
 - `color` (String)

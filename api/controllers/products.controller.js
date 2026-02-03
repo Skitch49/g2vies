@@ -20,12 +20,13 @@ module.exports.getProducts = async (req, res) => {
   }
 };
 
-module.exports.getBrandsAndCategories = async (req, res) => {
+module.exports.getBrandsAndCategoriesAndCpu = async (req, res) => {
   try {
     const brands = await ProductModel.distinct("brand");
     const categories = await ProductModel.distinct("category");
+    const cpuFamilies = await ProductModel.distinct("cpuFamily");
 
-    res.status(200).json({ brands, categories });
+    res.status(200).json({ brands, categories, cpuFamilies });
   } catch (e) {
     res
       .status(500)
@@ -42,7 +43,7 @@ module.exports.getProduct = async (req, res) => {
     res
       .status(500)
       .json(
-        "Erreur dans l'affichage du produit id : " + id + " | Erreur: " + e
+        "Erreur dans l'affichage du produit id : " + id + " | Erreur: " + e,
       );
   }
 };
@@ -106,7 +107,7 @@ module.exports.editProduct = async (req, res) => {
       const updatedProduct = await ProductModel.findByIdAndUpdate(
         req.params.id,
         req.body,
-        { new: true }
+        { new: true },
       );
       res.status(201).json(updatedProduct);
     }

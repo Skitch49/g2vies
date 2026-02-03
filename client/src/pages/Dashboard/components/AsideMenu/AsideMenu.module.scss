@@ -28,12 +28,14 @@
   width: 20px;
   height: 20px;
   cursor: pointer;
+  color: var(--white);
 }
 .xsMenu {
   margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: margin-top 0.4s ease;
 }
 .navlink {
   position: relative;
@@ -54,7 +56,10 @@
     background-color: var(--primary-dark);
     border-radius: 2px;
     opacity: 1;
-    transition: transform 0.3s, opacity 0.3s, background-color 0.3s;
+    transition:
+      transform 0.3s,
+      opacity 0.3s,
+      background-color 0.3s;
   }
 
   &:hover {
@@ -91,7 +96,9 @@
 .xsIcons {
   width: 20px;
   height: 20px;
-  transition: transform 0.4s, color 0.4s;
+  transition:
+    transform 0.4s,
+    color 0.4s;
   color: var(--secondary-light);
   &:hover {
     color: var(--text-color-light);
@@ -100,4 +107,12 @@
 .userIcon {
   width: 16px;
   height: 16px;
+}
+@media screen and (max-width: 800px) {
+  .iconMenu {
+    display: none !important;
+  }
+  .xsMenu {
+    margin-top: 5px;
+  }
 }

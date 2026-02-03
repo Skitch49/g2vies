@@ -20,3 +20,14 @@
     padding: 10px 5px 10px 10px;
   }
 }
+@media screen and (max-width: 500px) {
+  .headerSearch {
+    flex-direction: column;
+  }
+  .wrapperInput {
+    margin: 0;
+  }
+  .headerSearch {
+    margin: 1rem 0;
+  }
+}

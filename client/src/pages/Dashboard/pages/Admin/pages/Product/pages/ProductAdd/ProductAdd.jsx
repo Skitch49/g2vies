@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   createProduct,
-  getBrandsAndCategories,
+  getBrandsAndCategoriesAndCpu,
 } from "../../../../../../../../api";
 import { useContext } from "react";
 import { AlertContext } from "../../../../../../../../context";
@@ -15,6 +15,7 @@ import { useState } from "react";
 function ProductAdd() {
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [cpuFamilies, setCpuFamilies] = useState([]);
 
   const { addAlert } = useContext(AlertContext);
 
@@ -25,6 +26,7 @@ function ProductAdd() {
       .min(3, "Le nom du produit doit contenir au moins 3 caractères.")
       .max(100, "Le nom du produit ne peut pas dépasser 100 caractères."),
 
+    titleDescription: yup.string().nullable(),
     description: yup.string().nullable(),
 
     originalPrice: yup
@@ -47,7 +49,7 @@ function ProductAdd() {
           if (value == null || originalPrice == null) return true;
 
           return Number(originalPrice) >= Number(value);
-        }
+        },
       ),
 
     quantity: yup
@@ -87,7 +89,7 @@ function ProductAdd() {
           "Usagé",
           "Reconditionné",
         ],
-        "Condition invalide."
+        "Condition invalide.",
       ),
 
     images: yup
@@ -96,12 +98,19 @@ function ProductAdd() {
       .of(
         yup.object({
           url: yup.string().url("URL invalide").required("Image obligatoire"),
-        })
+        }),
       ),
 
     model: yup.string().nullable(),
 
-    cpu: yup.string().nullable(),
+    cpuFamily: yup.string().nullable(),
+    customCpuFamily: yup.string().when("cpuFamily", {
+      is: "other",
+      then: (schema) =>
+        schema.required("Veuillez renseigner le nouveau modèle de cpu."),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    cpuModel: yup.string().nullable(),
 
     gpu: yup.string().nullable(),
 
@@ -109,7 +118,7 @@ function ProductAdd() {
       .number()
       .typeError("La RAM doit être un nombre.")
       .transform((value, originalValue) =>
-        originalValue === "" ? null : value
+        originalValue === "" ? null : value,
       )
       .nullable()
       .min(1, "La RAM doit être supérieure à 0."),
@@ -118,7 +127,7 @@ function ProductAdd() {
     weight: yup
       .number()
       .transform((value, originalValue) =>
-        originalValue === "" ? null : value
+        originalValue === "" ? null : value,
       )
       .nullable()
       .typeError("Le poids doit être un nombre.")
@@ -166,12 +175,13 @@ function ProductAdd() {
           .required("La quantité est obligatoire.")
           .integer("La quantité doit être un nombre entier.")
           .min(1, "La quantité doit être au minimum 1."),
-      })
+      }),
     ),
   });
 
   const defaultValues = {
     name: "",
+    titleDescription: "",
     description: "",
     price: null,
     originalPrice: null,
@@ -188,7 +198,8 @@ function ProductAdd() {
     connectors: [{ name: "", quantity: 1 }],
 
     model: "",
-    cpu: "",
+    cpuFamily: "",
+    cpuModel: "",
     gpu: "",
     ram: null,
     color: "",
@@ -227,6 +238,7 @@ function ProductAdd() {
   const connectors = useFieldArray({ control, name: "connectors" });
   const selectedCategory = watch("category");
   const selectedBrand = watch("brand");
+  const selectedCpuFamily = watch("cpuFamily");
 
   function addImage() {
     images.append({
@@ -258,6 +270,10 @@ function ProductAdd() {
         setBrands([...brands, values.customBrand]);
         values.brand = values.customBrand;
       }
+      if (values.cpuFamily == "other") {
+        setCpuFamilies([...cpuFamilies, values.customCpuFamily]);
+        values.cpuFamily = values.customCpuFamily;
+      }
       await createProduct(values);
       reset(defaultValues);
       // reset useFieldArray
@@ -275,14 +291,15 @@ function ProductAdd() {
   }
 
   useEffect(() => {
-    async function getAllBrandsAndCategories() {
-      const data = await getBrandsAndCategories();
+    async function getListDetailsProducts() {
+      const data = await getBrandsAndCategoriesAndCpu();
       setBrands(data.brands);
       setCategories(data.categories);
+      setCpuFamilies(data.cpuFamilies);
     }
-    getAllBrandsAndCategories();
+    getListDetailsProducts();
   }, []);
-  console.log(errors);
+
   return (
     <div className="card">
       <h3>Ajouter un produit</h3>
@@ -291,6 +308,13 @@ function ProductAdd() {
           <label htmlFor="name">Nom</label>
           <input {...register("name")} type="text" id="name" />
           {errors.name && <p className="form-error">{errors.name.message}</p>}
+        </div>
+        <div className="d-flex flex-column mb-5">
+          <label htmlFor="titleDescription">Titre de la description</label>
+          <input {...register("titleDescription")} id="titleDescription" />
+          {errors.titleDescription && (
+            <p className="form-error">{errors.titleDescription.message}</p>
+          )}
         </div>
         <div className="d-flex flex-column mb-5">
           <label htmlFor="description">description</label>
@@ -455,9 +479,51 @@ function ProductAdd() {
           </button>
         </div>
         <div className="d-flex flex-column mb-5">
-          <label htmlFor="cpu">Processeur</label>
-          <input {...register("cpu")} type="text" id="cpu" />
-          {errors.cpu && <p className="form-error">{errors.cpu.message}</p>}
+          <label htmlFor="cpuFamily">Modèle du Processeur</label>
+          <select {...register("cpuFamily")} id="cpuFamily">
+            <option value="" disabled>
+              Sélectionne un processeur
+            </option>
+            {cpuFamilies &&
+              cpuFamilies.map((cpu, index) => (
+                <option key={index} value={cpu}>
+                  {cpu}
+                </option>
+              ))}
+
+            <option value="other">Autre</option>
+          </select>
+          {selectedCpuFamily === "other" && (
+            <div className="d-flex flex-column mt-5">
+              <label htmlFor="customCpuFamily">
+                Nouveau modèle du processeur
+              </label>
+              <input
+                {...register("customCpuFamily")}
+                type="text"
+                id="customCpuFamily"
+                placeholder="Intel Core i9"
+              />
+              {errors.customCpuFamily && (
+                <p className="form-error">{errors.customCpuFamily.message}</p>
+              )}
+            </div>
+          )}
+          {errors.cpuFamily && (
+            <p className="form-error">{errors.cpuFamily.message}</p>
+          )}
+        </div>
+        <div className="d-flex flex-column mb-5">
+          <label htmlFor="cpuModel">Modèle précis du cpu</label>
+          <input
+            {...register("cpuModel")}
+            type="text"
+            id="cpuModel"
+            placeholder="6600k"
+          />
+          {errors.cpuModel && (
+            <p className="form-error">{errors.cpuModel.message}</p>
+          )}
         </div>
         <div className="d-flex flex-column mb-5">
           <label htmlFor="gpu">Carte graphique</label>
